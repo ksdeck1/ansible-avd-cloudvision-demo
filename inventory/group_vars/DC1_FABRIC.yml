@@ -21,14 +21,14 @@ spine:
   defaults:
     platform: vEOS-LAB
     bgp_as: 65001
-    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_pool: 10.100.0.0/24
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
   nodes:
     DC1-SPINE1:
       id: 1
@@ -44,16 +44,16 @@ spine:
 l3leaf:
   defaults:
     platform: vEOS-LAB
-    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
-    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    vtep_loopback_ipv4_pool: 10.100.1.0/24
     uplink_interfaces: ['Ethernet1', 'Ethernet2']
     uplink_switches: ['DC1-SPINE1', 'DC1-SPINE2']
-    uplink_ipv4_pool: 172.31.255.0/24
+    uplink_ipv4_pool: 10.172.0.0/24
     mlag_interfaces: [ Ethernet3, Ethernet4 ]
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    virtual_router_mac_address: 00:1c:73:00:dc:01
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
+    virtual_router_mac_address: 00:1c:73:00:dc:11
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
@@ -92,9 +92,9 @@ l2leaf:
     uplink_switches: ['DC1-LEAF1A', 'DC1-LEAF1B']
     uplink_interfaces: [ Ethernet1, Ethernet2 ]
     mlag_interfaces: [ Ethernet3, Ethernet4 ]
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    virtual_router_mac_address: 00:1c:73:00:dc:01
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
+    virtual_router_mac_address: 00:1c:73:00:dc:11
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
     mlag: false
