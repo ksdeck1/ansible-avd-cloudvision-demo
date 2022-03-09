@@ -20,11 +20,11 @@ local_users:
     privilege: 15
     role: network-admin
     sha512_password: $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
-cvp_instance_ip: 10.255.0.1
+cvp_instance_ip: 10.183.0.1
 cvp_ingestauth_key: ''
 mgmt_interface: Management1
 mgmt_interface_vrf: MGMT
-mgmt_gateway: 10.255.0.1
+mgmt_gateway: 10.183.0.1
 name_servers:
 - 192.168.2.1
 - 8.8.8.8
@@ -62,10 +62,10 @@ spine:
   nodes:
     DC1-SPINE1:
       id: 1
-      mgmt_ip: 10.255.0.11/24
+      mgmt_ip: 10.183.0.11/24
     DC1-SPINE2:
       id: 2
-      mgmt_ip: 10.255.0.12/24
+      mgmt_ip: 10.183.0.12/24
 l3leaf:
   defaults:
     platform: vEOS-LAB
@@ -98,13 +98,13 @@ l3leaf:
       nodes:
         DC1-LEAF1A:
           id: 1
-          mgmt_ip: 10.255.0.13/24
+          mgmt_ip: 10.183.0.13/24
           uplink_switch_interfaces:
           - Ethernet1
           - Ethernet1
         DC1-LEAF1B:
           id: 2
-          mgmt_ip: 10.255.0.14/24
+          mgmt_ip: 10.183.0.14/24
           uplink_switch_interfaces:
           - Ethernet2
           - Ethernet2
@@ -113,13 +113,13 @@ l3leaf:
       nodes:
         DC1-LEAF2A:
           id: 3
-          mgmt_ip: 10.255.0.15/24
+          mgmt_ip: 10.183.0.15/24
           uplink_switch_interfaces:
           - Ethernet3
           - Ethernet3
         DC1-LEAF2B:
           id: 4
-          mgmt_ip: 10.255.0.16/24
+          mgmt_ip: 10.183.0.16/24
           uplink_switch_interfaces:
           - Ethernet4
           - Ethernet4
@@ -156,7 +156,7 @@ l2leaf:
       nodes:
         DC1-L2LEAF1A:
           id: 5
-          mgmt_ip: 10.255.0.17/24
+          mgmt_ip: 10.183.0.17/24
           uplink_switch_interfaces:
           - Ethernet5
           - Ethernet5
@@ -174,7 +174,7 @@ l2leaf:
       nodes:
         DC1-L2LEAF2A:
           id: 7
-          mgmt_ip: 10.255.0.18/24
+          mgmt_ip: 10.183.0.18/24
           uplink_switch_interfaces:
           - Ethernet5
           - Ethernet5
@@ -185,7 +185,7 @@ bfd_multihop:
   multiplier: 3
 inventory_file: /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
 inventory_dir: /home/avd/ansible-avd-cloudvision-demo/inventory
-ansible_host: 10.255.0.11
+ansible_host: 10.183.0.11
 inventory_hostname: DC1-SPINE1
 inventory_hostname_short: DC1-SPINE1
 group_names:
@@ -224,7 +224,7 @@ ansible_facts:
       overlay_loopback_interface: interface_descriptions/loopback_interfaces/overlay-loopback.j2
       vtep_loopback_interface: interface_descriptions/loopback_interfaces/vtep-loopback.j2
     id: 1
-    mgmt_ip: 10.255.0.11/24
+    mgmt_ip: 10.183.0.11/24
     platform: vEOS-LAB
     platform_settings:
       platforms:
@@ -285,7 +285,7 @@ switch:
     overlay_loopback_interface: interface_descriptions/loopback_interfaces/overlay-loopback.j2
     vtep_loopback_interface: interface_descriptions/loopback_interfaces/vtep-loopback.j2
   id: 1
-  mgmt_ip: 10.255.0.11/24
+  mgmt_ip: 10.183.0.11/24
   platform: vEOS-LAB
   platform_settings:
     platforms:
@@ -324,12 +324,12 @@ groups:
   - cv_server
   - DC1-SPINE1
   - DC1-SPINE2
+  - DC1-L2LEAF1A
+  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   ungrouped: []
   CVP:
   - cv_ztp
@@ -346,12 +346,12 @@ groups:
   DC1_FABRIC:
   - DC1-SPINE1
   - DC1-SPINE2
+  - DC1-L2LEAF1A
+  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   DC1_SPINES:
   - DC1-SPINE1
   - DC1-SPINE2
@@ -374,20 +374,20 @@ groups:
   DC1_L2LEAF2:
   - DC1-L2LEAF2A
   DC1_TENANTS_NETWORKS:
+  - DC1-L2LEAF1A
+  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   DC1_SERVERS:
+  - DC1-L2LEAF1A
+  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
-omit: __omit_place_holder__bde75013964c86233d58a91e544a81b317d3337b
+omit: __omit_place_holder__9934e4852aebe8b86ca64cedacabea97b0c50d0b
 ansible_version:
   string: 2.10.8
   full: 2.10.8
@@ -401,5 +401,5 @@ ansible_inventory_sources:
 - /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
 ansible_skip_tags: []
 ansible_run_tags:
-- generate
+- build
 ansible_verbosity: 0

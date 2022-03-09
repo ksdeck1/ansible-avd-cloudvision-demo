@@ -61,7 +61,7 @@
 
 | Management Interface | description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.255.0.14/24 | 10.255.0.1 |
+| Management1 | oob_management | oob | MGMT | 10.183.0.14/24 | 10.183.0.1 |
 
 #### IPv6
 
@@ -77,7 +77,7 @@ interface Management1
    description oob_management
    no shutdown
    vrf MGMT
-   ip address 10.255.0.14/24
+   ip address 10.183.0.14/24
 ```
 
 ## Name Servers
@@ -177,14 +177,14 @@ username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAW
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 10.255.0.1:9910 | MGMT | key, | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 10.183.0.1:9910 | MGMT | key, | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 ### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=10.255.0.1:9910 -cvauth=key, -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=10.183.0.1:9910 -cvauth=key, -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -926,13 +926,13 @@ ip routing vrf Tenant_C_WAN_Zone
 
 | VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
 | --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| MGMT  | 0.0.0.0/0 |  10.255.0.1  |  -  |  1  |  -  |  -  |  - |
+| MGMT  | 0.0.0.0/0 |  10.183.0.1  |  -  |  1  |  -  |  -  |  - |
 
 ### Static Routes Device Configuration
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 10.255.0.1
+ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 ```
 
 ## Router BGP
