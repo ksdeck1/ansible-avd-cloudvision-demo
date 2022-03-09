@@ -1,7 +1,6 @@
 # DC1_FABRIC
 
 # Table of Contents
-<!-- toc -->
 
 - [Fabric Switches and Management IP](#fabric-switches-and-management-ip)
   - [Fabric Switches with inband Management IP](#fabric-switches-with-inband-management-ip)
@@ -14,7 +13,6 @@
   - [VTEP Loopback VXLAN Tunnel Source Interfaces (VTEPs Only)](#vtep-loopback-vxlan-tunnel-source-interfaces-vteps-only)
   - [VTEP Loopback Node allocation](#vtep-loopback-node-allocation)
 
-<!-- toc -->
 # Fabric Switches and Management IP
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision |
@@ -61,49 +59,49 @@
 
 | Uplink IPv4 Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ---------------- | ------------------- | ------------------ | ------------------ |
-| 172.31.255.0/24 | 256 | 16 | 6.25 % |
+| 10.172.0.0/24 | 256 | 16 | 6.25 % |
 
 ## Point-To-Point Links Node Allocation
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
-| DC1-LEAF1A | Ethernet1 | 172.31.255.1/31 | DC1-SPINE1 | Ethernet1 | 172.31.255.0/31 |
-| DC1-LEAF1A | Ethernet2 | 172.31.255.3/31 | DC1-SPINE2 | Ethernet1 | 172.31.255.2/31 |
-| DC1-LEAF1B | Ethernet1 | 172.31.255.5/31 | DC1-SPINE1 | Ethernet2 | 172.31.255.4/31 |
-| DC1-LEAF1B | Ethernet2 | 172.31.255.7/31 | DC1-SPINE2 | Ethernet2 | 172.31.255.6/31 |
-| DC1-LEAF2A | Ethernet1 | 172.31.255.9/31 | DC1-SPINE1 | Ethernet3 | 172.31.255.8/31 |
-| DC1-LEAF2A | Ethernet2 | 172.31.255.11/31 | DC1-SPINE2 | Ethernet3 | 172.31.255.10/31 |
-| DC1-LEAF2B | Ethernet1 | 172.31.255.13/31 | DC1-SPINE1 | Ethernet4 | 172.31.255.12/31 |
-| DC1-LEAF2B | Ethernet2 | 172.31.255.15/31 | DC1-SPINE2 | Ethernet4 | 172.31.255.14/31 |
+| DC1-LEAF1A | Ethernet1 | 10.172.0.1/31 | DC1-SPINE1 | Ethernet1 | 10.172.0.0/31 |
+| DC1-LEAF1A | Ethernet2 | 10.172.0.3/31 | DC1-SPINE2 | Ethernet1 | 10.172.0.2/31 |
+| DC1-LEAF1B | Ethernet1 | 10.172.0.5/31 | DC1-SPINE1 | Ethernet2 | 10.172.0.4/31 |
+| DC1-LEAF1B | Ethernet2 | 10.172.0.7/31 | DC1-SPINE2 | Ethernet2 | 10.172.0.6/31 |
+| DC1-LEAF2A | Ethernet1 | 10.172.0.9/31 | DC1-SPINE1 | Ethernet3 | 10.172.0.8/31 |
+| DC1-LEAF2A | Ethernet2 | 10.172.0.11/31 | DC1-SPINE2 | Ethernet3 | 10.172.0.10/31 |
+| DC1-LEAF2B | Ethernet1 | 10.172.0.13/31 | DC1-SPINE1 | Ethernet4 | 10.172.0.12/31 |
+| DC1-LEAF2B | Ethernet2 | 10.172.0.15/31 | DC1-SPINE2 | Ethernet4 | 10.172.0.14/31 |
 
 ## Loopback Interfaces (BGP EVPN Peering)
 
 | Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------- | ------------------- | ------------------ | ------------------ |
-| 192.168.255.0/24 | 256 | 6 | 2.35 % |
+| 10.100.0.0/24 | 256 | 6 | 2.35 % |
 
 ## Loopback0 Interfaces Node Allocation
 
 | POD | Node | Loopback0 |
 | --- | ---- | --------- |
-| DC1_FABRIC | DC1-LEAF1A | 192.168.255.3/32 |
-| DC1_FABRIC | DC1-LEAF1B | 192.168.255.4/32 |
-| DC1_FABRIC | DC1-LEAF2A | 192.168.255.5/32 |
-| DC1_FABRIC | DC1-LEAF2B | 192.168.255.6/32 |
-| DC1_FABRIC | DC1-SPINE1 | 192.168.255.1/32 |
-| DC1_FABRIC | DC1-SPINE2 | 192.168.255.2/32 |
+| DC1_FABRIC | DC1-LEAF1A | 10.100.0.3/32 |
+| DC1_FABRIC | DC1-LEAF1B | 10.100.0.4/32 |
+| DC1_FABRIC | DC1-LEAF2A | 10.100.0.5/32 |
+| DC1_FABRIC | DC1-LEAF2B | 10.100.0.6/32 |
+| DC1_FABRIC | DC1-SPINE1 | 10.100.0.1/32 |
+| DC1_FABRIC | DC1-SPINE2 | 10.100.0.2/32 |
 
 ## VTEP Loopback VXLAN Tunnel Source Interfaces (VTEPs Only)
 
 | VTEP Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | --------------------- | ------------------- | ------------------ | ------------------ |
-| 192.168.254.0/24 | 256 | 4 | 1.57 % |
+| 10.100.1.0/24 | 256 | 4 | 1.57 % |
 
 ## VTEP Loopback Node allocation
 
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |
-| DC1_FABRIC | DC1-LEAF1A | 192.168.254.3/32 |
-| DC1_FABRIC | DC1-LEAF1B | 192.168.254.3/32 |
-| DC1_FABRIC | DC1-LEAF2A | 192.168.254.5/32 |
-| DC1_FABRIC | DC1-LEAF2B | 192.168.254.5/32 |
+| DC1_FABRIC | DC1-LEAF1A | 10.100.1.3/32 |
+| DC1_FABRIC | DC1-LEAF1B | 10.100.1.3/32 |
+| DC1_FABRIC | DC1-LEAF2A | 10.100.1.5/32 |
+| DC1_FABRIC | DC1-LEAF2B | 10.100.1.5/32 |

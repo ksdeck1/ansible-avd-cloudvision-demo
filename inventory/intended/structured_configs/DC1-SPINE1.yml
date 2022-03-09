@@ -1,6 +1,6 @@
 router_bgp:
   as: '65001'
-  router_id: 192.168.255.1
+  router_id: 10.100.0.1
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
@@ -32,35 +32,35 @@ router_bgp:
     connected:
       route_map: RM-CONN-2-BGP
   neighbors:
-    172.31.255.1:
+    10.172.0.1:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65101'
       description: DC1-LEAF1A_Ethernet1
-    172.31.255.5:
+    10.172.0.5:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65101'
       description: DC1-LEAF1B_Ethernet1
-    172.31.255.9:
+    10.172.0.9:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65102'
       description: DC1-LEAF2A_Ethernet1
-    172.31.255.13:
+    10.172.0.13:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65102'
       description: DC1-LEAF2B_Ethernet1
-    192.168.255.3:
+    10.100.0.3:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-LEAF1A
       remote_as: '65101'
-    192.168.255.4:
+    10.100.0.4:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-LEAF1B
       remote_as: '65101'
-    192.168.255.5:
+    10.100.0.5:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-LEAF2A
       remote_as: '65102'
-    192.168.255.6:
+    10.100.0.6:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-LEAF2B
       remote_as: '65102'
@@ -79,6 +79,7 @@ daemon_terminattr:
   - 10.255.0.1:9910
   cvauth:
     method: key
+    key: ''
   cvvrf: MGMT
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
@@ -133,7 +134,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 172.31.255.0/31
+    ip_address: 10.172.0.0/31
   Ethernet2:
     peer: DC1-LEAF1B
     peer_interface: Ethernet1
@@ -142,7 +143,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 172.31.255.4/31
+    ip_address: 10.172.0.4/31
   Ethernet3:
     peer: DC1-LEAF2A
     peer_interface: Ethernet1
@@ -151,7 +152,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 172.31.255.8/31
+    ip_address: 10.172.0.8/31
   Ethernet4:
     peer: DC1-LEAF2B
     peer_interface: Ethernet1
@@ -160,17 +161,17 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 172.31.255.12/31
+    ip_address: 10.172.0.12/31
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
-    ip_address: 192.168.255.1/32
+    ip_address: 10.100.0.1/32
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
       10:
-        action: permit 192.168.255.0/24 eq 32
+        action: permit 10.100.0.0/24 eq 32
 route_maps:
   RM-CONN-2-BGP:
     sequence_numbers:

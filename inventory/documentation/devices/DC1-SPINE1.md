@@ -1,6 +1,5 @@
 # DC1-SPINE1
 # Table of Contents
-<!-- toc -->
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
@@ -38,7 +37,6 @@
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
 - [Quality Of Service](#quality-of-service)
 
-<!-- toc -->
 # Management
 
 ## Management Interfaces
@@ -115,15 +113,14 @@ ntp server vrf MGMT 1.fr.pool.ntp.org
 ### Management API HTTP Summary
 
 | HTTP | HTTPS |
-| ---------- | ---------- |
-| default | true |
+| ---- | ----- |
+| False | True |
 
 ### Management API VRF Access
 
 | VRF Name | IPv4 ACL | IPv6 ACL |
 | -------- | -------- | -------- |
 | MGMT | - | - |
-
 
 ### Management API HTTP Configuration
 
@@ -166,14 +163,14 @@ username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAW
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 10.255.0.1:9910 | MGMT | - | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 10.255.0.1:9910 | MGMT | key, | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 ### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=10.255.0.1:9910 -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=10.255.0.1:9910 -cvauth=key, -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -182,9 +179,6 @@ daemon TerminAttr
 ## Spanning Tree Summary
 
 STP mode: **none**
-
-### Global Spanning-Tree Settings
-
 
 ## Spanning Tree Device Configuration
 
@@ -225,10 +219,10 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet1 | routed | - | 172.31.255.0/31 | default | 1500 | false | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF1B_Ethernet1 | routed | - | 172.31.255.4/31 | default | 1500 | false | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2A_Ethernet1 | routed | - | 172.31.255.8/31 | default | 1500 | false | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-LEAF2B_Ethernet1 | routed | - | 172.31.255.12/31 | default | 1500 | false | - | - |
+| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet1 | routed | - | 10.172.0.0/31 | default | 1500 | false | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-LEAF1B_Ethernet1 | routed | - | 10.172.0.4/31 | default | 1500 | false | - | - |
+| Ethernet3 | P2P_LINK_TO_DC1-LEAF2A_Ethernet1 | routed | - | 10.172.0.8/31 | default | 1500 | false | - | - |
+| Ethernet4 | P2P_LINK_TO_DC1-LEAF2B_Ethernet1 | routed | - | 10.172.0.12/31 | default | 1500 | false | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -239,28 +233,28 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.31.255.0/31
+   ip address 10.172.0.0/31
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-LEAF1B_Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.31.255.4/31
+   ip address 10.172.0.4/31
 !
 interface Ethernet3
    description P2P_LINK_TO_DC1-LEAF2A_Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.31.255.8/31
+   ip address 10.172.0.8/31
 !
 interface Ethernet4
    description P2P_LINK_TO_DC1-LEAF2B_Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.31.255.12/31
+   ip address 10.172.0.12/31
 ```
 
 ## Loopback Interfaces
@@ -271,7 +265,7 @@ interface Ethernet4
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | EVPN_Overlay_Peering | default | 192.168.255.1/32 |
+| Loopback0 | EVPN_Overlay_Peering | default | 10.100.0.1/32 |
 
 #### IPv6
 
@@ -287,7 +281,7 @@ interface Ethernet4
 interface Loopback0
    description EVPN_Overlay_Peering
    no shutdown
-   ip address 192.168.255.1/32
+   ip address 10.100.0.1/32
 ```
 
 # Routing
@@ -306,7 +300,8 @@ service routing protocols model multi-agent
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true|| MGMT | false |
+| default | true |
+| MGMT | false |
 
 ### IP Routing Device Configuration
 
@@ -321,8 +316,8 @@ no ip routing vrf MGMT
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false || MGMT | false |
-
+| default | false |
+| MGMT | false |
 
 ## Static Routes
 
@@ -345,7 +340,7 @@ ip route vrf MGMT 0.0.0.0/0 10.255.0.1
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65001|  192.168.255.1 |
+| 65001|  10.100.0.1 |
 
 | BGP Tuning |
 | ---------- |
@@ -364,7 +359,7 @@ ip route vrf MGMT 0.0.0.0/0 10.255.0.1
 | Address Family | evpn |
 | Next-hop unchanged | True |
 | Source | Loopback0 |
-| Bfd | true |
+| BFD | True |
 | Ebgp multihop | 3 |
 | Send community | all |
 | Maximum routes | 0 (no limit) |
@@ -379,29 +374,31 @@ ip route vrf MGMT 0.0.0.0/0 10.255.0.1
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS | VRF |
-| -------- | --------- | --- |
-| 172.31.255.1 | 65101 | default |
-| 172.31.255.5 | 65101 | default |
-| 172.31.255.9 | 65102 | default |
-| 172.31.255.13 | 65102 | default |
-| 192.168.255.3 | 65101 | default |
-| 192.168.255.4 | 65101 | default |
-| 192.168.255.5 | 65102 | default |
-| 192.168.255.6 | 65102 | default |
+| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD |
+| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- |
+| 10.100.0.3 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 10.100.0.4 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 10.100.0.5 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 10.100.0.6 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 10.172.0.1 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 10.172.0.5 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 10.172.0.9 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 10.172.0.13 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
 
 ### Router BGP EVPN Address Family
 
-#### Router BGP EVPN MAC-VRFs
+#### EVPN Peer Groups
 
-#### Router BGP EVPN VRFs
+| Peer Group | Activate |
+| ---------- | -------- |
+| EVPN-OVERLAY-PEERS | True |
 
 ### Router BGP Device Configuration
 
 ```eos
 !
 router bgp 65001
-   router-id 192.168.255.1
+   router-id 10.100.0.1
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300
@@ -419,30 +416,30 @@ router bgp 65001
    neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
-   neighbor 172.31.255.1 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.1 remote-as 65101
-   neighbor 172.31.255.1 description DC1-LEAF1A_Ethernet1
-   neighbor 172.31.255.5 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.5 remote-as 65101
-   neighbor 172.31.255.5 description DC1-LEAF1B_Ethernet1
-   neighbor 172.31.255.9 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.9 remote-as 65102
-   neighbor 172.31.255.9 description DC1-LEAF2A_Ethernet1
-   neighbor 172.31.255.13 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.13 remote-as 65102
-   neighbor 172.31.255.13 description DC1-LEAF2B_Ethernet1
-   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.3 remote-as 65101
-   neighbor 192.168.255.3 description DC1-LEAF1A
-   neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.4 remote-as 65101
-   neighbor 192.168.255.4 description DC1-LEAF1B
-   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.5 remote-as 65102
-   neighbor 192.168.255.5 description DC1-LEAF2A
-   neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.6 remote-as 65102
-   neighbor 192.168.255.6 description DC1-LEAF2B
+   neighbor 10.100.0.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.100.0.3 remote-as 65101
+   neighbor 10.100.0.3 description DC1-LEAF1A
+   neighbor 10.100.0.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.100.0.4 remote-as 65101
+   neighbor 10.100.0.4 description DC1-LEAF1B
+   neighbor 10.100.0.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.100.0.5 remote-as 65102
+   neighbor 10.100.0.5 description DC1-LEAF2A
+   neighbor 10.100.0.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 10.100.0.6 remote-as 65102
+   neighbor 10.100.0.6 description DC1-LEAF2B
+   neighbor 10.172.0.1 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.172.0.1 remote-as 65101
+   neighbor 10.172.0.1 description DC1-LEAF1A_Ethernet1
+   neighbor 10.172.0.5 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.172.0.5 remote-as 65101
+   neighbor 10.172.0.5 description DC1-LEAF1B_Ethernet1
+   neighbor 10.172.0.9 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.172.0.9 remote-as 65102
+   neighbor 10.172.0.9 description DC1-LEAF2A_Ethernet1
+   neighbor 10.172.0.13 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.172.0.13 remote-as 65102
+   neighbor 10.172.0.13 description DC1-LEAF2B_Ethernet1
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
@@ -463,7 +460,7 @@ router bgp 65001
 | -------- | ---------- | ---------- |
 | 1200 | 1200 | 3 |
 
-### Router BFD Multihop Device Configuration
+### Router BFD Device Configuration
 
 ```eos
 !
@@ -483,14 +480,14 @@ router bfd
 
 | Sequence | Action |
 | -------- | ------ |
-| 10 | permit 192.168.255.0/24 eq 32 |
+| 10 | permit 10.100.0.0/24 eq 32 |
 
 ### Prefix-lists Device Configuration
 
 ```eos
 !
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-   seq 10 permit 192.168.255.0/24 eq 32
+   seq 10 permit 10.100.0.0/24 eq 32
 ```
 
 ## Route-maps

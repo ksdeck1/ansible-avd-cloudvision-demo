@@ -1,4 +1,4 @@
-Node Type,Node,Node Interface,Peer Type,Peer,Peer Interface
+Node Type,Node,Node Interface,Peer Type,Peer Node,Peer Interface
 l2leaf,DC1-L2LEAF1A,Ethernet1,l3leaf,DC1-LEAF1A,Ethernet5
 l2leaf,DC1-L2LEAF1A,Ethernet2,l3leaf,DC1-LEAF1B,Ethernet5
 l2leaf,DC1-L2LEAF1A,Ethernet5,server,server01,Eth0

@@ -51,14 +51,14 @@ spine:
   defaults:
     platform: vEOS-LAB
     bgp_as: 65001
-    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_pool: 10.100.0.0/24
     bgp_defaults:
     - no bgp default ipv4-unicast
     - distance bgp 20 200 200
     - graceful-restart restart-time 300
     - graceful-restart
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
   nodes:
     DC1-SPINE1:
       id: 1
@@ -69,22 +69,22 @@ spine:
 l3leaf:
   defaults:
     platform: vEOS-LAB
-    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
-    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    vtep_loopback_ipv4_pool: 10.100.1.0/24
     uplink_interfaces:
     - Ethernet1
     - Ethernet2
     uplink_switches:
     - DC1-SPINE1
     - DC1-SPINE2
-    uplink_ipv4_pool: 172.31.255.0/24
+    uplink_ipv4_pool: 10.172.0.0/24
     mlag_interfaces:
     - Ethernet3
     - Ethernet4
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    virtual_router_mac_address: 00:1c:73:00:dc:01
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
+    virtual_router_mac_address: 00:1c:73:00:dc:11
     bgp_defaults:
     - no bgp default ipv4-unicast
     - distance bgp 20 200 200
@@ -135,9 +135,9 @@ l2leaf:
     mlag_interfaces:
     - Ethernet3
     - Ethernet4
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    virtual_router_mac_address: 00:1c:73:00:dc:01
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
+    virtual_router_mac_address: 00:1c:73:00:dc:11
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
     mlag: false
@@ -183,8 +183,8 @@ bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
-inventory_file: /Users/tgrimonet/Projects/arista-community/ansible-avd-cloudvision-demo/inventory/inventory.yml
-inventory_dir: /Users/tgrimonet/Projects/arista-community/ansible-avd-cloudvision-demo/inventory
+inventory_file: /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
+inventory_dir: /home/avd/ansible-avd-cloudvision-demo/inventory
 ansible_host: 10.255.0.12
 inventory_hostname: DC1-SPINE2
 inventory_hostname_short: DC1-SPINE2
@@ -205,24 +205,24 @@ ansible_facts:
     uplink_type: p2p
     vtep: false
     ip_addressing:
-      router_id: designs/l3ls-evpn/ip-addressing/router-id.j2
-      mlag_ip_primary: designs/l3ls-evpn/ip-addressing/mlag-ip-primary.j2
-      mlag_ip_secondary: designs/l3ls-evpn/ip-addressing/mlag-ip-secondary.j2
-      mlag_l3_ip_primary: designs/l3ls-evpn/ip-addressing/mlag-l3-ip-primary.j2
-      mlag_l3_ip_secondary: designs/l3ls-evpn/ip-addressing/mlag-l3-ip-secondary.j2
-      p2p_uplinks_ip: designs/l3ls-evpn/ip-addressing/p2p-uplinks-ip.j2
-      p2p_uplinks_peer_ip: designs/l3ls-evpn/ip-addressing/p2p-uplinks-peer-ip.j2
-      vtep_ip_mlag: designs/l3ls-evpn/ip-addressing/vtep-ip-mlag.j2
-      vtep_ip: designs/l3ls-evpn/ip-addressing/vtep-ip.j2
+      router_id: ip_addressing/router-id.j2
+      mlag_ip_primary: ip_addressing/mlag-ip-primary.j2
+      mlag_ip_secondary: ip_addressing/mlag-ip-secondary.j2
+      mlag_l3_ip_primary: ip_addressing/mlag-l3-ip-primary.j2
+      mlag_l3_ip_secondary: ip_addressing/mlag-l3-ip-secondary.j2
+      p2p_uplinks_ip: ip_addressing/p2p-uplinks-ip.j2
+      p2p_uplinks_peer_ip: ip_addressing/p2p-uplinks-peer-ip.j2
+      vtep_ip_mlag: ip_addressing/vtep-ip-mlag.j2
+      vtep_ip: ip_addressing/vtep-ip.j2
     interface_descriptions:
-      underlay_ethernet_interfaces: designs/l3ls-evpn/interface-descriptions/underlay/ethernet-interfaces.j2
-      underlay_port_channel_interfaces: designs/l3ls-evpn/interface-descriptions/underlay/port-channel-interfaces.j2
-      connected_endpoints_ethernet_interfaces: designs/l3ls-evpn/interface-descriptions/connected-endpoints/ethernet-interfaces.j2
-      connected_endpoints_port_channel_interfaces: designs/l3ls-evpn/interface-descriptions/connected-endpoints/port-channel-interfaces.j2
-      overlay_loopback_interface: designs/l3ls-evpn/interface-descriptions/loopback-interfaces/overlay-loopback.j2
-      vtep_loopback_interface: designs/l3ls-evpn/interface-descriptions/loopback-interfaces/vtep-loopback.j2
-    underlay_routing_protocol: ebgp
-    overlay_routing_protocol: ebgp
+      underlay_ethernet_interfaces: interface_descriptions/underlay/ethernet-interfaces.j2
+      underlay_port_channel_interfaces: interface_descriptions/underlay/port-channel-interfaces.j2
+      mlag_ethernet_interfaces: interface_descriptions/mlag/ethernet-interfaces.j2
+      mlag_port_channel_interfaces: interface_descriptions/mlag/port-channel-interfaces.j2
+      connected_endpoints_ethernet_interfaces: interface_descriptions/connected_endpoints/ethernet-interfaces.j2
+      connected_endpoints_port_channel_interfaces: interface_descriptions/connected_endpoints/port-channel-interfaces.j2
+      overlay_loopback_interface: interface_descriptions/loopback_interfaces/overlay-loopback.j2
+      vtep_loopback_interface: interface_descriptions/loopback_interfaces/vtep-loopback.j2
     id: 2
     mgmt_ip: 10.255.0.12/24
     platform: vEOS-LAB
@@ -234,12 +234,15 @@ ansible_facts:
         non_mlag: 330
       feature_support:
         queue_monitor_length_notify: false
+    mgmt_interface: Management1
+    underlay_routing_protocol: ebgp
+    overlay_routing_protocol: ebgp
     spanning_tree_mode: none
     max_uplink_switches: 0
     max_parallel_uplinks: 1
-    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 0
-    router_id: 192.168.255.2
+    router_id: 10.100.0.2
     bgp_as: '65001'
     bgp_defaults:
     - no bgp default ipv4-unicast
@@ -263,24 +266,24 @@ switch:
   uplink_type: p2p
   vtep: false
   ip_addressing:
-    router_id: designs/l3ls-evpn/ip-addressing/router-id.j2
-    mlag_ip_primary: designs/l3ls-evpn/ip-addressing/mlag-ip-primary.j2
-    mlag_ip_secondary: designs/l3ls-evpn/ip-addressing/mlag-ip-secondary.j2
-    mlag_l3_ip_primary: designs/l3ls-evpn/ip-addressing/mlag-l3-ip-primary.j2
-    mlag_l3_ip_secondary: designs/l3ls-evpn/ip-addressing/mlag-l3-ip-secondary.j2
-    p2p_uplinks_ip: designs/l3ls-evpn/ip-addressing/p2p-uplinks-ip.j2
-    p2p_uplinks_peer_ip: designs/l3ls-evpn/ip-addressing/p2p-uplinks-peer-ip.j2
-    vtep_ip_mlag: designs/l3ls-evpn/ip-addressing/vtep-ip-mlag.j2
-    vtep_ip: designs/l3ls-evpn/ip-addressing/vtep-ip.j2
+    router_id: ip_addressing/router-id.j2
+    mlag_ip_primary: ip_addressing/mlag-ip-primary.j2
+    mlag_ip_secondary: ip_addressing/mlag-ip-secondary.j2
+    mlag_l3_ip_primary: ip_addressing/mlag-l3-ip-primary.j2
+    mlag_l3_ip_secondary: ip_addressing/mlag-l3-ip-secondary.j2
+    p2p_uplinks_ip: ip_addressing/p2p-uplinks-ip.j2
+    p2p_uplinks_peer_ip: ip_addressing/p2p-uplinks-peer-ip.j2
+    vtep_ip_mlag: ip_addressing/vtep-ip-mlag.j2
+    vtep_ip: ip_addressing/vtep-ip.j2
   interface_descriptions:
-    underlay_ethernet_interfaces: designs/l3ls-evpn/interface-descriptions/underlay/ethernet-interfaces.j2
-    underlay_port_channel_interfaces: designs/l3ls-evpn/interface-descriptions/underlay/port-channel-interfaces.j2
-    connected_endpoints_ethernet_interfaces: designs/l3ls-evpn/interface-descriptions/connected-endpoints/ethernet-interfaces.j2
-    connected_endpoints_port_channel_interfaces: designs/l3ls-evpn/interface-descriptions/connected-endpoints/port-channel-interfaces.j2
-    overlay_loopback_interface: designs/l3ls-evpn/interface-descriptions/loopback-interfaces/overlay-loopback.j2
-    vtep_loopback_interface: designs/l3ls-evpn/interface-descriptions/loopback-interfaces/vtep-loopback.j2
-  underlay_routing_protocol: ebgp
-  overlay_routing_protocol: ebgp
+    underlay_ethernet_interfaces: interface_descriptions/underlay/ethernet-interfaces.j2
+    underlay_port_channel_interfaces: interface_descriptions/underlay/port-channel-interfaces.j2
+    mlag_ethernet_interfaces: interface_descriptions/mlag/ethernet-interfaces.j2
+    mlag_port_channel_interfaces: interface_descriptions/mlag/port-channel-interfaces.j2
+    connected_endpoints_ethernet_interfaces: interface_descriptions/connected_endpoints/ethernet-interfaces.j2
+    connected_endpoints_port_channel_interfaces: interface_descriptions/connected_endpoints/port-channel-interfaces.j2
+    overlay_loopback_interface: interface_descriptions/loopback_interfaces/overlay-loopback.j2
+    vtep_loopback_interface: interface_descriptions/loopback_interfaces/vtep-loopback.j2
   id: 2
   mgmt_ip: 10.255.0.12/24
   platform: vEOS-LAB
@@ -292,12 +295,15 @@ switch:
       non_mlag: 330
     feature_support:
       queue_monitor_length_notify: false
+  mgmt_interface: Management1
+  underlay_routing_protocol: ebgp
+  overlay_routing_protocol: ebgp
   spanning_tree_mode: none
   max_uplink_switches: 0
   max_parallel_uplinks: 1
-  loopback_ipv4_pool: 192.168.255.0/24
+  loopback_ipv4_pool: 10.100.0.0/24
   loopback_ipv4_offset: 0
-  router_id: 192.168.255.2
+  router_id: 10.100.0.2
   bgp_as: '65001'
   bgp_defaults:
   - no bgp default ipv4-unicast
@@ -309,9 +315,9 @@ switch:
 topology:
   peers: []
   vlans: []
-playbook_dir: /Users/tgrimonet/Projects/arista-community/ansible-avd-cloudvision-demo/playbooks
-ansible_playbook_python: /Users/tgrimonet/.pyenv/versions/3.9.7/envs/arista-avd-demo/bin/python3.9
-ansible_config_file: /Users/tgrimonet/Projects/arista-community/ansible-avd-cloudvision-demo/ansible.cfg
+playbook_dir: /home/avd/ansible-avd-cloudvision-demo/playbooks
+ansible_playbook_python: /usr/local/bin/python
+ansible_config_file: /home/avd/ansible-avd-cloudvision-demo/ansible.cfg
 groups:
   all:
   - cv_ztp
@@ -381,19 +387,19 @@ groups:
   - DC1-LEAF2B
   - DC1-L2LEAF1A
   - DC1-L2LEAF2A
-omit: __omit_place_holder__977da4f00604c643da39a9f2175c10b09f0b2380
+omit: __omit_place_holder__bde75013964c86233d58a91e544a81b317d3337b
 ansible_version:
-  string: 2.10.14
-  full: 2.10.14
+  string: 2.10.8
+  full: 2.10.8
   major: 2
   minor: 10
-  revision: 14
+  revision: 8
 ansible_check_mode: false
 ansible_diff_mode: false
 ansible_forks: 5
 ansible_inventory_sources:
-- /Users/tgrimonet/Projects/arista-community/ansible-avd-cloudvision-demo/inventory/inventory.yml
+- /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
 ansible_skip_tags: []
 ansible_run_tags:
-- build
+- generate
 ansible_verbosity: 0
