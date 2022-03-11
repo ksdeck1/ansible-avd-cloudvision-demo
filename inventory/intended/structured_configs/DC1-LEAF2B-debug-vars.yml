@@ -123,61 +123,6 @@ l3leaf:
           uplink_switch_interfaces:
           - Ethernet4
           - Ethernet4
-l2leaf:
-  defaults:
-    platform: vEOS-LAB
-    uplink_switches:
-    - DC1-LEAF1A
-    - DC1-LEAF1B
-    uplink_interfaces:
-    - Ethernet1
-    - Ethernet2
-    mlag_interfaces:
-    - Ethernet3
-    - Ethernet4
-    mlag_peer_ipv4_pool: 10.192.0.0/24
-    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
-    virtual_router_mac_address: 00:1c:73:00:dc:11
-    spanning_tree_mode: mstp
-    spanning_tree_priority: 16384
-    mlag: false
-  node_groups:
-    DC1_L2LEAF1:
-      uplink_switches:
-      - DC1-LEAF1A
-      - DC1-LEAF1B
-      filter:
-        tenants:
-        - Tenant_A
-        tags:
-        - opzone
-        - web
-        - app
-      nodes:
-        DC1-L2LEAF1A:
-          id: 5
-          mgmt_ip: 10.183.0.17/24
-          uplink_switch_interfaces:
-          - Ethernet5
-          - Ethernet5
-    DC1_L2LEAF2:
-      uplink_switches:
-      - DC1-LEAF2A
-      - DC1-LEAF2B
-      filter:
-        tenants:
-        - Tenant_A
-        tags:
-        - opzone
-        - web
-        - app
-      nodes:
-        DC1-L2LEAF2A:
-          id: 7
-          mgmt_ip: 10.183.0.18/24
-          uplink_switch_interfaces:
-          - Ethernet5
-          - Ethernet5
 p2p_uplinks_mtu: 1500
 bfd_multihop:
   interval: 1200
@@ -256,6 +201,22 @@ tenants:
             - opzone
             enabled: true
             ip_address_virtual: 10.1.12.254/24
+          200:
+            name: Tenant_A_OP_Zone_1-200
+            tags:
+            - opzone
+            enabled: true
+            ip_virtual_router_addresses:
+            - 10.1.200.1
+            nodes:
+              DC1-LEAF1A:
+                ip_address: 10.1.200.2/24
+              DC1-LEAF1B:
+                ip_address: 10.1.200.3/24
+              DC1-LEAF2A:
+                ip_address: 10.1.200.2/24
+              DC1-LEAF2B:
+                ip_address: 10.1.200.3/24
       Tenant_A_WEB_Zone:
         vrf_vni: 11
         svis:
@@ -313,70 +274,6 @@ tenants:
             - wan
             enabled: true
             ip_address_virtual: 10.1.40.1/24
-    l2vlans:
-      160:
-        vni_override: 55160
-        name: Tenant_A_VMOTION
-        tags:
-        - vmotion
-      161:
-        name: Tenant_A_NFS
-        tags:
-        - nfs
-  Tenant_B:
-    mac_vrf_vni_base: 20000
-    vrfs:
-      Tenant_B_OP_Zone:
-        vrf_vni: 20
-        svis:
-          210:
-            name: Tenant_B_OP_Zone_1
-            tags:
-            - opzone
-            enabled: true
-            ip_subnet: 10.2.10.0/24
-          211:
-            name: Tenant_B_OP_Zone_2
-            tags:
-            - opzone
-            enabled: true
-            ip_address_virtual: 10.2.11.1/24
-      Tenant_B_WAN_Zone:
-        vrf_vni: 21
-        svis:
-          250:
-            name: Tenant_B_WAN_Zone_1
-            tags:
-            - wan
-            enabled: true
-            ip_address_virtual: 10.2.50.1/24
-  Tenant_C:
-    mac_vrf_vni_base: 30000
-    vrfs:
-      Tenant_C_OP_Zone:
-        vrf_vni: 30
-        svis:
-          310:
-            name: Tenant_C_OP_Zone_1
-            tags:
-            - opzone
-            enabled: true
-            ip_subnet: 10.3.10.0/24
-          311:
-            name: Tenant_C_OP_Zone_2
-            tags:
-            - opzone
-            enabled: true
-            ip_subnet: 10.3.11.1/24
-      Tenant_C_WAN_Zone:
-        vrf_vni: 31
-        svis:
-          350:
-            name: Tenant_C_WAN_Zone_1
-            tags:
-            - wan
-            enabled: true
-            ip_subnet: 10.3.50.1/24
 inventory_file: /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
 inventory_dir: /home/avd/ansible-avd-cloudvision-demo/inventory
 ansible_host: 10.183.0.16
@@ -505,6 +402,7 @@ ansible_facts:
             - 110
             - 111
             - 112
+            - 200
           Tenant_A_WAN_Zone:
             svis:
             - 150
@@ -512,28 +410,6 @@ ansible_facts:
             svis:
             - 120
             - 121
-        l2vlans:
-        - 160
-        - 161
-      Tenant_B:
-        vrfs:
-          Tenant_B_OP_Zone:
-            svis:
-            - 210
-            - 211
-          Tenant_B_WAN_Zone:
-            svis:
-            - 250
-        l2vlans: []
-      Tenant_C:
-        vrfs:
-          Tenant_C_OP_Zone:
-            svis:
-            - 310
-            - 311
-          Tenant_C_WAN_Zone:
-            svis:
-            - 350
         l2vlans: []
     vlans:
     - 130
@@ -543,17 +419,10 @@ ansible_facts:
     - 110
     - 111
     - 112
+    - 200
     - 150
     - 120
     - 121
-    - 160
-    - 161
-    - 210
-    - 211
-    - 250
-    - 310
-    - 311
-    - 350
   topology:
     links:
       Ethernet1:
@@ -583,17 +452,10 @@ ansible_facts:
     - 110
     - 111
     - 112
+    - 200
     - 150
     - 120
     - 121
-    - 160
-    - 161
-    - 210
-    - 211
-    - 250
-    - 310
-    - 311
-    - 350
 switch:
   type: l3leaf
   node_type_key: l3leaf
@@ -709,6 +571,7 @@ switch:
           - 110
           - 111
           - 112
+          - 200
         Tenant_A_WAN_Zone:
           svis:
           - 150
@@ -716,28 +579,6 @@ switch:
           svis:
           - 120
           - 121
-      l2vlans:
-      - 160
-      - 161
-    Tenant_B:
-      vrfs:
-        Tenant_B_OP_Zone:
-          svis:
-          - 210
-          - 211
-        Tenant_B_WAN_Zone:
-          svis:
-          - 250
-      l2vlans: []
-    Tenant_C:
-      vrfs:
-        Tenant_C_OP_Zone:
-          svis:
-          - 310
-          - 311
-        Tenant_C_WAN_Zone:
-          svis:
-          - 350
       l2vlans: []
   vlans:
   - 130
@@ -747,17 +588,10 @@ switch:
   - 110
   - 111
   - 112
+  - 200
   - 150
   - 120
   - 121
-  - 160
-  - 161
-  - 210
-  - 211
-  - 250
-  - 310
-  - 311
-  - 350
 topology:
   links:
     Ethernet1:
@@ -787,17 +621,10 @@ topology:
   - 110
   - 111
   - 112
+  - 200
   - 150
   - 120
   - 121
-  - 160
-  - 161
-  - 210
-  - 211
-  - 250
-  - 310
-  - 311
-  - 350
 playbook_dir: /home/avd/ansible-avd-cloudvision-demo/playbooks
 ansible_playbook_python: /usr/local/bin/python
 ansible_config_file: /home/avd/ansible-avd-cloudvision-demo/ansible.cfg
@@ -807,8 +634,6 @@ groups:
   - cv_server
   - DC1-SPINE1
   - DC1-SPINE2
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
@@ -820,8 +645,6 @@ groups:
   DC1:
   - DC1-SPINE1
   - DC1-SPINE2
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
@@ -829,8 +652,6 @@ groups:
   DC1_FABRIC:
   - DC1-SPINE1
   - DC1-SPINE2
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
@@ -849,28 +670,17 @@ groups:
   DC1_LEAF2:
   - DC1-LEAF2A
   - DC1-LEAF2B
-  DC1_L2LEAFS:
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
-  DC1_L2LEAF1:
-  - DC1-L2LEAF1A
-  DC1_L2LEAF2:
-  - DC1-L2LEAF2A
   DC1_TENANTS_NETWORKS:
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
   DC1_SERVERS:
-  - DC1-L2LEAF1A
-  - DC1-L2LEAF2A
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-omit: __omit_place_holder__a4fb3aa8374360e765e8cac43148cd73a596dbe6
+omit: __omit_place_holder__fec7dc7e6f3a18b721a67199b435be2a91f845f0
 ansible_version:
   string: 2.10.8
   full: 2.10.8
