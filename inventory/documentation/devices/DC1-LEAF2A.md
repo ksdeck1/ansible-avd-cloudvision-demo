@@ -560,7 +560,7 @@ interface Loopback100
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan110 |  Tenant_A_OP_Zone  |  -  |  -  |  10.1.10.1  |  -  |  -  |  -  |
+| Vlan110 |  Tenant_A_OP_Zone  |  10.1.10.2/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
 | Vlan111 |  Tenant_A_OP_Zone  |  -  |  10.1.11.1/24  |  -  |  -  |  -  |  -  |
 | Vlan112 |  Tenant_A_OP_Zone  |  -  |  10.1.12.254/24  |  -  |  -  |  -  |  -  |
 | Vlan120 |  Tenant_A_WEB_Zone  |  -  |  -  |  -  |  -  |  -  |  -  |
@@ -597,6 +597,7 @@ interface Vlan110
    description Tenant_A_OP_Zone_1
    no shutdown
    vrf Tenant_A_OP_Zone
+   ip address 10.1.10.2/24
    ip virtual-router address 10.1.10.1
 !
 interface Vlan111

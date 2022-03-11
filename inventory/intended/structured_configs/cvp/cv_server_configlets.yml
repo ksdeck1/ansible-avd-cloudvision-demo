@@ -108,11 +108,11 @@ CVP_CONFIGLETS:
     \   ip address 10.255.1.3/32\n!\ninterface Management1\n   description oob_management\n\
     \   no shutdown\n   vrf MGMT\n   ip address 10.183.0.13/24\n!\ninterface Vlan110\n\
     \   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
-    \   ip virtual-router address 10.1.10.1\n!\ninterface Vlan111\n   description\
-    \ Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual\
-    \ 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n   no\
-    \ shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n!\n\
-    interface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
+    \   ip address 10.1.10.2/24\n   ip virtual-router address 10.1.10.1\n!\ninterface\
+    \ Vlan111\n   description Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
+    \   ip address virtual 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n\
+    \   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n\
+    !\ninterface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
     \ Tenant_A_WEB_Zone\n!\ninterface Vlan121\n   description Tenant_A_WEBZone_2\n\
     \   no shutdown\n   vrf Tenant_A_WEB_Zone\n   ip address virtual 10.1.21.1/24\n\
     !\ninterface Vlan130\n   description Tenant_A_APP_Zone_1\n   no shutdown\n   vrf\
@@ -310,11 +310,11 @@ CVP_CONFIGLETS:
     \   ip address 10.255.1.4/32\n!\ninterface Management1\n   description oob_management\n\
     \   no shutdown\n   vrf MGMT\n   ip address 10.183.0.14/24\n!\ninterface Vlan110\n\
     \   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
-    \   ip virtual-router address 10.1.10.1\n!\ninterface Vlan111\n   description\
-    \ Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual\
-    \ 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n   no\
-    \ shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n!\n\
-    interface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
+    \   ip address 10.1.10.3/24\n   ip virtual-router address 10.1.10.1\n!\ninterface\
+    \ Vlan111\n   description Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
+    \   ip address virtual 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n\
+    \   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n\
+    !\ninterface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
     \ Tenant_A_WEB_Zone\n!\ninterface Vlan121\n   description Tenant_A_WEBZone_2\n\
     \   no shutdown\n   vrf Tenant_A_WEB_Zone\n   ip address virtual 10.1.21.1/24\n\
     !\ninterface Vlan130\n   description Tenant_A_APP_Zone_1\n   no shutdown\n   vrf\
@@ -512,11 +512,11 @@ CVP_CONFIGLETS:
     \   ip address 10.255.1.5/32\n!\ninterface Management1\n   description oob_management\n\
     \   no shutdown\n   vrf MGMT\n   ip address 10.183.0.15/24\n!\ninterface Vlan110\n\
     \   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
-    \   ip virtual-router address 10.1.10.1\n!\ninterface Vlan111\n   description\
-    \ Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual\
-    \ 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n   no\
-    \ shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n!\n\
-    interface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
+    \   ip address 10.1.10.2/24\n   ip virtual-router address 10.1.10.1\n!\ninterface\
+    \ Vlan111\n   description Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
+    \   ip address virtual 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n\
+    \   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n\
+    !\ninterface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
     \ Tenant_A_WEB_Zone\n!\ninterface Vlan121\n   description Tenant_A_WEBZone_2\n\
     \   no shutdown\n   vrf Tenant_A_WEB_Zone\n   ip address virtual 10.1.21.1/24\n\
     !\ninterface Vlan130\n   description Tenant_A_APP_Zone_1\n   no shutdown\n   vrf\
@@ -714,11 +714,11 @@ CVP_CONFIGLETS:
     \   ip address 10.255.1.6/32\n!\ninterface Management1\n   description oob_management\n\
     \   no shutdown\n   vrf MGMT\n   ip address 10.183.0.16/24\n!\ninterface Vlan110\n\
     \   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
-    \   ip virtual-router address 10.1.10.1\n!\ninterface Vlan111\n   description\
-    \ Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual\
-    \ 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n   no\
-    \ shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n!\n\
-    interface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
+    \   ip address 10.1.10.3/24\n   ip virtual-router address 10.1.10.1\n!\ninterface\
+    \ Vlan111\n   description Tenant_A_OP_Zone_2\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
+    \   ip address virtual 10.1.11.1/24\n!\ninterface Vlan112\n   description Tenant_A_OP_Zone_3\n\
+    \   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.12.254/24\n\
+    !\ninterface Vlan120\n   description Tenant_A_WEB_Zone_1\n   no shutdown\n   vrf\
     \ Tenant_A_WEB_Zone\n!\ninterface Vlan121\n   description Tenant_A_WEBZone_2\n\
     \   no shutdown\n   vrf Tenant_A_WEB_Zone\n   ip address virtual 10.1.21.1/24\n\
     !\ninterface Vlan130\n   description Tenant_A_APP_Zone_1\n   no shutdown\n   vrf\
