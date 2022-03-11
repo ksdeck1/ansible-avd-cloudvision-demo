@@ -17,10 +17,10 @@
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- |
-| DC1_FABRIC | l3leaf | DC1-LEAF1A | 10.183.0.13/24 | vEOS-LAB | Provisioned |
-| DC1_FABRIC | l3leaf | DC1-LEAF1B | 10.183.0.14/24 | vEOS-LAB | Provisioned |
-| DC1_FABRIC | l3leaf | DC1-LEAF2A | 10.183.0.15/24 | vEOS-LAB | Provisioned |
-| DC1_FABRIC | l3leaf | DC1-LEAF2B | 10.183.0.16/24 | vEOS-LAB | Provisioned |
+| DC1_FABRIC | l3leaf | DC1-LEAF1A | - | vEOS-LAB | Provisioned |
+| DC1_FABRIC | l3leaf | DC1-LEAF1B | - | vEOS-LAB | Provisioned |
+| DC1_FABRIC | l3leaf | DC1-LEAF2A | - | vEOS-LAB | Provisioned |
+| DC1_FABRIC | l3leaf | DC1-LEAF2B | - | vEOS-LAB | Provisioned |
 
 > Provision status is based on Ansible inventory declaration and do not represent real status from CloudVision.
 

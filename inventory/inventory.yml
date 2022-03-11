@@ -31,21 +31,11 @@ all:
                 DC1_LEAF1:
                   hosts:
                     DC1-LEAF1A:
-                      ansible_host: 10.183.0.13
                     DC1-LEAF1B:
-                      ansible_host: 10.183.0.14
                 DC1_LEAF2:
                   hosts:
                     DC1-LEAF2A:
-                      ansible_host: 10.183.0.15
                     DC1-LEAF2B:
-                      ansible_host: 10.183.0.16
-#                DC1_LEAF3:
-#                 hosts:
-#                    DC1-LEAF3A:
-#                      ansible_host: 10.183.0.17
-#                    DC1-LEAF3B:
-#                      ansible_host: 10.183.0.18
           vars:
             ansible_connection: httpapi
             ansible_network_os: eos

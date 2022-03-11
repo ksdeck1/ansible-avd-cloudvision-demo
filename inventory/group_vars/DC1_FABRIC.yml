@@ -7,15 +7,6 @@ fabric_name: DC1_FABRIC
 # Enable vlan aware bundles
 vxlan_vlan_aware_bundles: true
 
-# bgp peer groups passwords
-bgp_peer_groups:
-  IPv4_UNDERLAY_PEERS:
-    password: "AQQvKeimxJu+uGQ/yYvv9w=="
-  EVPN_OVERLAY_PEERS:
-    password: "q+VNViP5i4rVjW1cxFv2wA=="
-  MLAG_IPv4_UNDERLAY_PEER:
-    password: "vnEaG8gMeQf3d3cN6PktXQ=="
-
 # Spine Switches
 spine:
   defaults:
@@ -27,9 +18,6 @@ spine:
       - 'distance bgp 20 200 200'
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
-    mlag_peer_ipv4_pool: 10.192.0.0/24
-    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
-
 
 # Leaf switch groups
 # A maximum of two nodes can form a leaf group
@@ -50,7 +38,7 @@ l3leaf:
       - 'distance bgp 20 200 200'
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
-    spanning_tree_mode: mstp
+    spanning_tree_mode: rapid-pvst
     spanning_tree_priority: 16384
   node_groups:
     DC1_LEAF1:
@@ -58,28 +46,17 @@ l3leaf:
       nodes:
         DC1-LEAF1A:
           id: 1
-          mgmt_ip: 10.183.0.13/24
         DC1-LEAF1B:
           id: 2
-          mgmt_ip: 10.183.0.14/24
     DC1_LEAF2:
       bgp_as: 65102
       nodes:
         DC1-LEAF2A:
           id: 3
-          mgmt_ip: 10.183.0.15/24
         DC1-LEAF2B:
           id: 4
-          mgmt_ip: 10.183.0.16/24
-    DC1_LEAF3:
-      bgp_as: 65103
-      nodes:
-        DC1-LEAF3A:
-          id: 5
-          mgmt_ip: 10.183.0.17/24
-        DC1-LEAF3B:
-          id: 6
-          mgmt_ip: 10.183.0.18/24
+
+
 
 #### Override for vEOS Lab Caveats ####
 
