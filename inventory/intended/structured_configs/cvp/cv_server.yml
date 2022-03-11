@@ -16,14 +16,6 @@ CVP_DEVICES:
     parentContainerName: DC1_LEAF2
     configlets:
       - DC1-AVD_DC1-LEAF2B
-  - fqdn: DC1-SPINE1
-    parentContainerName: DC1_SPINES
-    configlets:
-      - DC1-AVD_DC1-SPINE1
-  - fqdn: DC1-SPINE2
-    parentContainerName: DC1_SPINES
-    configlets:
-      - DC1-AVD_DC1-SPINE2
 CVP_CONTAINERS:
   DC1_FABRIC:
     parentContainerName: Tenant
@@ -33,5 +25,3 @@ CVP_CONTAINERS:
     parentContainerName: DC1_L3LEAFS
   DC1_LEAF2:
     parentContainerName: DC1_L3LEAFS
-  DC1_SPINES:
-    parentContainerName: DC1_FABRIC

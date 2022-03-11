@@ -59,26 +59,12 @@ spine:
     - graceful-restart
     mlag_peer_ipv4_pool: 10.192.0.0/24
     mlag_peer_l3_ipv4_pool: 10.192.1.0/24
-  nodes:
-    DC1-SPINE1:
-      id: 1
-      mgmt_ip: 10.183.0.11/24
-    DC1-SPINE2:
-      id: 2
-      mgmt_ip: 10.183.0.12/24
 l3leaf:
   defaults:
     platform: vEOS-LAB
     loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
     vtep_loopback_ipv4_pool: 10.100.1.0/24
-    uplink_interfaces:
-    - Ethernet1
-    - Ethernet2
-    uplink_switches:
-    - DC1-SPINE1
-    - DC1-SPINE2
-    uplink_ipv4_pool: 10.172.0.0/24
     mlag_interfaces:
     - Ethernet3
     - Ethernet4
@@ -99,77 +85,38 @@ l3leaf:
         DC1-LEAF1A:
           id: 1
           mgmt_ip: 10.183.0.13/24
-          uplink_switch_interfaces:
-          - Ethernet1
-          - Ethernet1
         DC1-LEAF1B:
           id: 2
           mgmt_ip: 10.183.0.14/24
-          uplink_switch_interfaces:
-          - Ethernet2
-          - Ethernet2
     DC1_LEAF2:
       bgp_as: 65102
       nodes:
         DC1-LEAF2A:
           id: 3
           mgmt_ip: 10.183.0.15/24
-          uplink_switch_interfaces:
-          - Ethernet3
-          - Ethernet3
         DC1-LEAF2B:
           id: 4
           mgmt_ip: 10.183.0.16/24
-          uplink_switch_interfaces:
-          - Ethernet4
-          - Ethernet4
+    DC1_LEAF3:
+      bgp_as: 65103
+      nodes:
+        DC1-LEAF3A:
+          id: 5
+          mgmt_ip: 10.183.0.17/24
+        DC1-LEAF3B:
+          id: 6
+          mgmt_ip: 10.183.0.18/24
 p2p_uplinks_mtu: 1500
 bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
-port_profiles:
-  TENANT_A_B:
-    mode: trunk
-    vlans: 110-111,210-211
-  TENANT_A:
-    mode: access
-    vlans: '110'
-  TENANT_B:
-    mode: trunk
-    vlans: 210-211
-servers:
-  server01:
-    rack: RackA
-    adapters:
-    - type: nic
-      server_ports:
-      - Eth0
-      switch_ports:
-      - Ethernet5
-      switches:
-      - DC1-L2LEAF1A
-      profile: TENANT_A
-  server02:
-    rack: RackA
-    adapters:
-    - type: nic
-      server_ports:
-      - Eth0
-      switch_ports:
-      - Ethernet5
-      switches:
-      - DC1-L2LEAF2A
-      profile: TENANT_A
 tenants:
   Tenant_A:
     mac_vrf_vni_base: 10000
     vrfs:
       Tenant_A_OP_Zone:
         vrf_vni: 10
-        vtep_diagnostic:
-          loopback: 100
-          loopback_ip_range: 10.255.1.0/24
         svis:
           110:
             name: Tenant_A_OP_Zone_1
@@ -186,6 +133,10 @@ tenants:
               DC1-LEAF2A:
                 ip_address: 10.1.10.2/24
               DC1-LEAF2B:
+                ip_address: 10.1.10.3/24
+              DC1-LEAF3A:
+                ip_address: 10.1.10.2/24
+              DC1-LEAF3B:
                 ip_address: 10.1.10.3/24
           111:
             vni_override: 50111
@@ -216,6 +167,10 @@ tenants:
               DC1-LEAF2A:
                 ip_address: 10.1.200.2/24
               DC1-LEAF2B:
+                ip_address: 10.1.200.3/24
+              DC1-LEAF3A:
+                ip_address: 10.1.200.2/24
+              DC1-LEAF3B:
                 ip_address: 10.1.200.3/24
       Tenant_A_WEB_Zone:
         vrf_vni: 11
@@ -284,7 +239,6 @@ group_names:
 - DC1_FABRIC
 - DC1_L3LEAFS
 - DC1_LEAF1
-- DC1_SERVERS
 - DC1_TENANTS_NETWORKS
 ansible_facts:
   switch:
@@ -340,20 +294,10 @@ ansible_facts:
     spanning_tree_priority: 16384
     igmp_snooping_enabled: true
     virtual_router_mac_address: 00:1c:73:00:dc:11
-    max_uplink_switches: 2
+    max_uplink_switches: 0
     max_parallel_uplinks: 1
-    uplink_switches:
-    - DC1-SPINE1
-    - DC1-SPINE2
-    uplink_switch_interfaces:
-    - Ethernet1
-    - Ethernet1
-    uplink_interfaces:
-    - Ethernet1
-    - Ethernet2
     loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
-    uplink_ipv4_pool: 10.172.0.0/24
     router_id: 10.100.0.3
     bgp_as: '65101'
     bgp_defaults:
@@ -362,9 +306,6 @@ ansible_facts:
     - graceful-restart restart-time 300
     - graceful-restart
     evpn_role: client
-    evpn_route_servers:
-    - DC1-SPINE1
-    - DC1-SPINE2
     mlag: true
     mlag_group: DC1_LEAF1
     mlag_ibgp_origin_incomplete: true
@@ -424,26 +365,7 @@ ansible_facts:
     - 120
     - 121
   topology:
-    links:
-      Ethernet1:
-        peer: DC1-SPINE1
-        peer_interface: Ethernet1
-        peer_type: spine
-        peer_bgp_as: '65001'
-        type: underlay_p2p
-        ip_address: 10.172.0.1
-        peer_ip_address: 10.172.0.0
-      Ethernet2:
-        peer: DC1-SPINE2
-        peer_interface: Ethernet1
-        peer_type: spine
-        peer_bgp_as: '65001'
-        type: underlay_p2p
-        ip_address: 10.172.0.3
-        peer_ip_address: 10.172.0.2
-    peers:
-    - DC1-SPINE1
-    - DC1-SPINE2
+    peers: []
     vlans:
     - 130
     - 131
@@ -509,20 +431,10 @@ switch:
   spanning_tree_priority: 16384
   igmp_snooping_enabled: true
   virtual_router_mac_address: 00:1c:73:00:dc:11
-  max_uplink_switches: 2
+  max_uplink_switches: 0
   max_parallel_uplinks: 1
-  uplink_switches:
-  - DC1-SPINE1
-  - DC1-SPINE2
-  uplink_switch_interfaces:
-  - Ethernet1
-  - Ethernet1
-  uplink_interfaces:
-  - Ethernet1
-  - Ethernet2
   loopback_ipv4_pool: 10.100.0.0/24
   loopback_ipv4_offset: 2
-  uplink_ipv4_pool: 10.172.0.0/24
   router_id: 10.100.0.3
   bgp_as: '65101'
   bgp_defaults:
@@ -531,9 +443,6 @@ switch:
   - graceful-restart restart-time 300
   - graceful-restart
   evpn_role: client
-  evpn_route_servers:
-  - DC1-SPINE1
-  - DC1-SPINE2
   mlag: true
   mlag_group: DC1_LEAF1
   mlag_ibgp_origin_incomplete: true
@@ -593,26 +502,7 @@ switch:
   - 120
   - 121
 topology:
-  links:
-    Ethernet1:
-      peer: DC1-SPINE1
-      peer_interface: Ethernet1
-      peer_type: spine
-      peer_bgp_as: '65001'
-      type: underlay_p2p
-      ip_address: 10.172.0.1
-      peer_ip_address: 10.172.0.0
-    Ethernet2:
-      peer: DC1-SPINE2
-      peer_interface: Ethernet1
-      peer_type: spine
-      peer_bgp_as: '65001'
-      type: underlay_p2p
-      ip_address: 10.172.0.3
-      peer_ip_address: 10.172.0.2
-  peers:
-  - DC1-SPINE1
-  - DC1-SPINE2
+  peers: []
   vlans:
   - 130
   - 131
@@ -632,8 +522,6 @@ groups:
   all:
   - cv_ztp
   - cv_server
-  - DC1-SPINE1
-  - DC1-SPINE2
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
@@ -643,22 +531,15 @@ groups:
   - cv_ztp
   - cv_server
   DC1:
-  - DC1-SPINE1
-  - DC1-SPINE2
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
   DC1_FABRIC:
-  - DC1-SPINE1
-  - DC1-SPINE2
   - DC1-LEAF1A
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-  DC1_SPINES:
-  - DC1-SPINE1
-  - DC1-SPINE2
   DC1_L3LEAFS:
   - DC1-LEAF1A
   - DC1-LEAF1B
@@ -675,12 +556,7 @@ groups:
   - DC1-LEAF1B
   - DC1-LEAF2A
   - DC1-LEAF2B
-  DC1_SERVERS:
-  - DC1-LEAF1A
-  - DC1-LEAF1B
-  - DC1-LEAF2A
-  - DC1-LEAF2B
-omit: __omit_place_holder__fec7dc7e6f3a18b721a67199b435be2a91f845f0
+omit: __omit_place_holder__16aa69a513c29d5a6e4bef4bfd114e99a2a2b78a
 ansible_version:
   string: 2.10.8
   full: 2.10.8

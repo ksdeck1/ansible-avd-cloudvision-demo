@@ -46,9 +46,6 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
-- [Virtual Source NAT](#virtual-source-nat)
-  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
-  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 - [Quality Of Service](#quality-of-service)
 
 # Management
@@ -267,7 +264,6 @@ vlan internal order ascending range 1006 1199
 | 140 | Tenant_A_DB_BZone_1 | - |
 | 141 | Tenant_A_DB_Zone_2 | - |
 | 150 | Tenant_A_WAN_Zone_1 | - |
-| 200 | Tenant_A_OP_Zone_1-200 | - |
 | 3009 | MLAG_iBGP_Tenant_A_OP_Zone | LEAF_PEER_L3 |
 | 3010 | MLAG_iBGP_Tenant_A_WEB_Zone | LEAF_PEER_L3 |
 | 3011 | MLAG_iBGP_Tenant_A_APP_Zone | LEAF_PEER_L3 |
@@ -309,9 +305,6 @@ vlan 141
 !
 vlan 150
    name Tenant_A_WAN_Zone_1
-!
-vlan 200
-   name Tenant_A_OP_Zone_1-200
 !
 vlan 3009
    name MLAG_iBGP_Tenant_A_OP_Zone
@@ -357,30 +350,9 @@ vlan 4094
 
 *Inherited from Port-Channel Interface
 
-#### IPv4
-
-| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
-| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet1 | routed | - | 10.172.0.1/31 | default | 1500 | false | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet1 | routed | - | 10.172.0.3/31 | default | 1500 | false | - | - |
-
 ### Ethernet Interfaces Device Configuration
 
 ```eos
-!
-interface Ethernet1
-   description P2P_LINK_TO_DC1-SPINE1_Ethernet1
-   no shutdown
-   mtu 1500
-   no switchport
-   ip address 10.172.0.1/31
-!
-interface Ethernet2
-   description P2P_LINK_TO_DC1-SPINE2_Ethernet1
-   no shutdown
-   mtu 1500
-   no switchport
-   ip address 10.172.0.3/31
 !
 interface Ethernet3
    description MLAG_PEER_DC1-LEAF1B_Ethernet3
@@ -427,7 +399,6 @@ interface Port-Channel3
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 10.100.0.3/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.100.1.3/32 |
-| Loopback100 | Tenant_A_OP_Zone_VTEP_DIAGNOSTICS | Tenant_A_OP_Zone | 10.255.1.3/32 |
 
 #### IPv6
 
@@ -435,7 +406,6 @@ interface Port-Channel3
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
-| Loopback100 | Tenant_A_OP_Zone_VTEP_DIAGNOSTICS | Tenant_A_OP_Zone | - |
 
 
 ### Loopback Interfaces Device Configuration
@@ -451,12 +421,6 @@ interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    no shutdown
    ip address 10.100.1.3/32
-!
-interface Loopback100
-   description Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
-   no shutdown
-   vrf Tenant_A_OP_Zone
-   ip address 10.255.1.3/32
 ```
 
 ## VLAN Interfaces
@@ -475,7 +439,6 @@ interface Loopback100
 | Vlan140 |  Tenant_A_DB_BZone_1  |  Tenant_A_DB_Zone  |  -  |  false  |
 | Vlan141 |  Tenant_A_DB_Zone_2  |  Tenant_A_DB_Zone  |  -  |  false  |
 | Vlan150 |  Tenant_A_WAN_Zone_1  |  Tenant_A_WAN_Zone  |  -  |  false  |
-| Vlan200 |  Tenant_A_OP_Zone_1-200  |  Tenant_A_OP_Zone  |  -  |  false  |
 | Vlan3009 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone  |  Tenant_A_OP_Zone  |  1500  |  false  |
 | Vlan3010 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_WEB_Zone  |  Tenant_A_WEB_Zone  |  1500  |  false  |
 | Vlan3011 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_APP_Zone  |  Tenant_A_APP_Zone  |  1500  |  false  |
@@ -498,7 +461,6 @@ interface Loopback100
 | Vlan140 |  Tenant_A_DB_Zone  |  -  |  10.1.40.1/24  |  -  |  -  |  -  |  -  |
 | Vlan141 |  Tenant_A_DB_Zone  |  -  |  10.1.41.1/24  |  -  |  -  |  -  |  -  |
 | Vlan150 |  Tenant_A_WAN_Zone  |  -  |  10.1.40.1/24  |  -  |  -  |  -  |  -  |
-| Vlan200 |  Tenant_A_OP_Zone  |  10.1.200.2/24  |  -  |  10.1.200.1  |  -  |  -  |  -  |
 | Vlan3009 |  Tenant_A_OP_Zone  |  10.192.1.0/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan3010 |  Tenant_A_WEB_Zone  |  10.192.1.0/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan3011 |  Tenant_A_APP_Zone  |  10.192.1.0/31  |  -  |  -  |  -  |  -  |  -  |
@@ -570,13 +532,6 @@ interface Vlan150
    no shutdown
    vrf Tenant_A_WAN_Zone
    ip address virtual 10.1.40.1/24
-!
-interface Vlan200
-   description Tenant_A_OP_Zone_1-200
-   no shutdown
-   vrf Tenant_A_OP_Zone
-   ip address 10.1.200.2/24
-   ip virtual-router address 10.1.200.1
 !
 interface Vlan3009
    description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone
@@ -651,7 +606,6 @@ interface Vlan4094
 | 140 | 10140 | - | - |
 | 141 | 10141 | - | - |
 | 150 | 10150 | - | - |
-| 200 | 10200 | - | - |
 
 #### VRF to VNI and Multicast Group Mappings
 
@@ -682,7 +636,6 @@ interface Vxlan1
    vxlan vlan 140 vni 10140
    vxlan vlan 141 vni 10141
    vxlan vlan 150 vni 10150
-   vxlan vlan 200 vni 10200
    vxlan vrf Tenant_A_APP_Zone vni 12
    vxlan vrf Tenant_A_DB_Zone vni 13
    vxlan vrf Tenant_A_OP_Zone vni 10
@@ -819,10 +772,6 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- |
-| 10.100.0.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 10.100.0.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 10.172.0.0 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
-| 10.172.0.2 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
 | 10.192.1.1 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - |
 | 10.192.1.1 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_APP_Zone | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - |
 | 10.192.1.1 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_DB_Zone | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - |
@@ -844,7 +793,7 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
 | Tenant_A_APP_Zone | 10.100.0.3:12 | 12:12 | - | - | learned | 130-131 |
 | Tenant_A_DB_Zone | 10.100.0.3:13 | 13:13 | - | - | learned | 140-141 |
-| Tenant_A_OP_Zone | 10.100.0.3:10 | 10:10 | - | - | learned | 110-112,200 |
+| Tenant_A_OP_Zone | 10.100.0.3:10 | 10:10 | - | - | learned | 110-112 |
 | Tenant_A_WAN_Zone | 10.100.0.3:14 | 14:14 | - | - | learned | 150 |
 | Tenant_A_WEB_Zone | 10.100.0.3:11 | 11:11 | - | - | learned | 120-121 |
 
@@ -887,18 +836,6 @@ router bgp 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor 10.100.0.1 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.100.0.1 remote-as 65001
-   neighbor 10.100.0.1 description DC1-SPINE1
-   neighbor 10.100.0.2 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.100.0.2 remote-as 65001
-   neighbor 10.100.0.2 description DC1-SPINE2
-   neighbor 10.172.0.0 peer group IPv4-UNDERLAY-PEERS
-   neighbor 10.172.0.0 remote-as 65001
-   neighbor 10.172.0.0 description DC1-SPINE1_Ethernet1
-   neighbor 10.172.0.2 peer group IPv4-UNDERLAY-PEERS
-   neighbor 10.172.0.2 remote-as 65001
-   neighbor 10.172.0.2 description DC1-SPINE2_Ethernet1
    neighbor 10.192.1.1 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.192.1.1 description DC1-LEAF1B
    redistribute connected route-map RM-CONN-2-BGP
@@ -919,7 +856,7 @@ router bgp 65101
       rd 10.100.0.3:10
       route-target both 10:10
       redistribute learned
-      vlan 110-112,200
+      vlan 110-112
    !
    vlan-aware-bundle Tenant_A_WAN_Zone
       rd 10.100.0.3:14
@@ -1095,21 +1032,6 @@ vrf instance Tenant_A_OP_Zone
 vrf instance Tenant_A_WAN_Zone
 !
 vrf instance Tenant_A_WEB_Zone
-```
-
-# Virtual Source NAT
-
-## Virtual Source NAT Summary
-
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.3 |
-
-## Virtual Source NAT Configuration
-
-```eos
-!
-ip address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.3
 ```
 
 # Quality Of Service

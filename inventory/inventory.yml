@@ -24,14 +24,6 @@ all:
       children:
         DC1_FABRIC:
           children:
-            DC1_SPINES:
-              vars:
-                type: spine
-              hosts:
-                DC1-SPINE1:
-                  ansible_host: 10.183.0.11
-                DC1-SPINE2:
-                  ansible_host: 10.183.0.12
             DC1_L3LEAFS:
               vars:
                 type: l3leaf
@@ -48,6 +40,12 @@ all:
                       ansible_host: 10.183.0.15
                     DC1-LEAF2B:
                       ansible_host: 10.183.0.16
+#                DC1_LEAF3:
+#                 hosts:
+#                    DC1-LEAF3A:
+#                      ansible_host: 10.183.0.17
+#                    DC1-LEAF3B:
+#                      ansible_host: 10.183.0.18
           vars:
             ansible_connection: httpapi
             ansible_network_os: eos
@@ -59,8 +57,5 @@ all:
             ansible_httpapi_use_ssl: true
             ansible_httpapi_validate_certs: false
         DC1_TENANTS_NETWORKS:
-          children:
-            DC1_L3LEAFS:
-        DC1_SERVERS:
           children:
             DC1_L3LEAFS:

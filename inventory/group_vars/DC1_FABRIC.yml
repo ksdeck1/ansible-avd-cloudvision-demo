@@ -29,13 +29,7 @@ spine:
       - 'graceful-restart'
     mlag_peer_ipv4_pool: 10.192.0.0/24
     mlag_peer_l3_ipv4_pool: 10.192.1.0/24
-  nodes:
-    DC1-SPINE1:
-      id: 1
-      mgmt_ip: 10.183.0.11/24
-    DC1-SPINE2:
-      id: 2
-      mgmt_ip: 10.183.0.12/24
+
 
 # Leaf switch groups
 # A maximum of two nodes can form a leaf group
@@ -47,9 +41,6 @@ l3leaf:
     loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
     vtep_loopback_ipv4_pool: 10.100.1.0/24
-    uplink_interfaces: ['Ethernet1', 'Ethernet2']
-    uplink_switches: ['DC1-SPINE1', 'DC1-SPINE2']
-    uplink_ipv4_pool: 10.172.0.0/24
     mlag_interfaces: [ Ethernet3, Ethernet4 ]
     mlag_peer_ipv4_pool: 10.192.0.0/24
     mlag_peer_l3_ipv4_pool: 10.192.1.0/24
@@ -68,22 +59,27 @@ l3leaf:
         DC1-LEAF1A:
           id: 1
           mgmt_ip: 10.183.0.13/24
-          uplink_switch_interfaces: [Ethernet1, Ethernet1]
         DC1-LEAF1B:
           id: 2
           mgmt_ip: 10.183.0.14/24
-          uplink_switch_interfaces: [Ethernet2, Ethernet2]
     DC1_LEAF2:
       bgp_as: 65102
       nodes:
         DC1-LEAF2A:
           id: 3
           mgmt_ip: 10.183.0.15/24
-          uplink_switch_interfaces: [Ethernet3, Ethernet3]
         DC1-LEAF2B:
           id: 4
           mgmt_ip: 10.183.0.16/24
-          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+    DC1_LEAF3:
+      bgp_as: 65103
+      nodes:
+        DC1-LEAF3A:
+          id: 5
+          mgmt_ip: 10.183.0.17/24
+        DC1-LEAF3B:
+          id: 6
+          mgmt_ip: 10.183.0.18/24
 
 #### Override for vEOS Lab Caveats ####
 
