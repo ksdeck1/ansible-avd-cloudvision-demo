@@ -1,6 +1,29 @@
 ---
 CVP_DEVICES:
-  []
+  - fqdn: KR1-LEAF1A
+    parentContainerName: KR1_LEAF1
+    configlets:
+      - DC1-AVD_KR1-LEAF1A
+  - fqdn: KR1-LEAF1B
+    parentContainerName: KR1_LEAF1
+    configlets:
+      - DC1-AVD_KR1-LEAF1B
+  - fqdn: KR1-LEAF2A
+    parentContainerName: KR1_LEAF2
+    configlets:
+      - DC1-AVD_KR1-LEAF2A
+  - fqdn: KR1-LEAF2B
+    parentContainerName: KR1_LEAF2
+    configlets:
+      - DC1-AVD_KR1-LEAF2B
+  - fqdn: KR1-SPINE1
+    parentContainerName: KR1_SPINES
+    configlets:
+      - DC1-AVD_KR1-SPINE1
+  - fqdn: KR1-SPINE2
+    parentContainerName: KR1_SPINES
+    configlets:
+      - DC1-AVD_KR1-SPINE2
 CVP_CONTAINERS:
   DC_FABRIC:
     parentContainerName: Tenant
@@ -11,4 +34,6 @@ CVP_CONTAINERS:
   KR1_LEAF2:
     parentContainerName: KR1_10LAN_L3LEAFS
   KR1_PUBLIC_L3LEAFS:
+    parentContainerName: DC_FABRIC
+  KR1_SPINES:
     parentContainerName: DC_FABRIC

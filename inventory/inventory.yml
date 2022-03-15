@@ -24,6 +24,12 @@ all:
       children:
         DC_FABRIC:
           children:
+            KR1_SPINES:
+              vars:
+                type: spine
+              hosts:
+                KR1-SPINE1:
+                KR1-SPINE2:
             KR1_PUBLIC_L3LEAFS:
               vars:
                 type: l3leaf

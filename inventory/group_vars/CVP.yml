@@ -21,27 +21,27 @@ ztp:
       mac: '00:50:56:86:8b:2f'
       ip4: 10.183.0.2
   # AVD/CVP Integration
-    - name: DC1-SPINE1
+    - name: KR1-SPINE1
       mac: '50:02:00:01:00:00'
       ip4: 10.183.0.11
-    - name: DC1-SPINE2
+    - name: KR1-SPINE2
       mac: '50:02:00:02:00:00'
       ip4: 10.183.0.12
-    - name: DC1-LEAF1A
+    - name: KR1-LEAF1A
       mac: '50:02:00:03:00:00'
       ip4: 10.183.0.13
-    - name: DC1-LEAF1B
+    - name: KR1-LEAF1B
       mac: '50:02:00:04:00:00'
       ip4: 10.183.0.14
-    - name: DC1-LEAF2A
+    - name: KR1-LEAF2A
       mac: '50:02:00:05:00:00'
       ip4: 10.183.0.15
-    - name: DC1-LEAF2B
+    - name: KR1-LEAF2B
       mac: '50:02:00:06:00:00'
       ip4: 10.183.0.16
-    - name: DC1-L2LEAF1A
+    - name: KR1-L2LEAF1A
       mac: '50:02:00:07:00:00'
       ip4: 10.183.0.17
-    - name: DC1-L2LEAF2A
+    - name: KR1-L2LEAF2A
       mac: '50:02:00:08:00:00'
       ip4: 10.183.0.18

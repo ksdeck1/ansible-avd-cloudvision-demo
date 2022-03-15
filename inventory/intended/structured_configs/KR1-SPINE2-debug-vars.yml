@@ -6,7 +6,7 @@ ansible_become: true
 ansible_become_method: enable
 ansible_httpapi_use_ssl: true
 ansible_httpapi_validate_certs: false
-type: l3leaf
+type: spine
 local_users:
   admin:
     privilege: 15
@@ -114,80 +114,26 @@ bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
-tenants:
-  Tenant_A:
-    mac_vrf_vni_base: 10000
-    enable_mlag_ibgp_peering_vrfs: false
-    vrfs:
-      OP_Zone:
-        vrf_vni: 10
-        svis:
-          110:
-            name: OP_Zone_1
-            tags:
-            - Public
-            - 10LAN
-            enabled: true
-            ip_virtual_router_addresses:
-            - 10.1.10.1
-            nodes:
-              KR1-LEAF1A:
-                ip_address: 10.1.10.2/24
-              KR1-LEAF1B:
-                ip_address: 10.1.10.3/24
-              KR1-LEAF2A:
-                ip_address: 10.1.10.2/24
-              KR1-LEAF2B:
-                ip_address: 10.1.10.3/24
-              KR1-LEAF3A:
-                ip_address: 10.1.10.2/24
-              KR1-LEAF3B:
-                ip_address: 10.1.10.3/24
-      10LAN_Zone:
-        vrf_vni: 20
-        svis:
-          120:
-            name: 10LAN_Zone_1
-            tags:
-            - 10LAN
-            enabled: true
-            ip_virtual_router_addresses:
-            - 10.1.20.1
-            nodes:
-              KR1-LEAF1A:
-                ip_address: 10.1.20.2/24
-              KR1-LEAF1B:
-                ip_address: 10.1.20.3/24
-              KR1-LEAF2A:
-                ip_address: 10.1.20.2/24
-              KR1-LEAF2B:
-                ip_address: 10.1.20.3/24
-              KR1-LEAF3A:
-                ip_address: 10.1.20.2/24
-              KR1-LEAF3B:
-                ip_address: 10.1.20.3/24
 inventory_file: /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
 inventory_dir: /home/avd/ansible-avd-cloudvision-demo/inventory
-inventory_hostname: KR1-LEAF2A
-inventory_hostname_short: KR1-LEAF2A
+inventory_hostname: KR1-SPINE2
+inventory_hostname_short: KR1-SPINE2
 group_names:
 - DC
 - DC_FABRIC
-- KR1_10LAN_L3LEAFS
-- KR1_LEAF2
-- KR1_TENANTS_NETWORKS
+- KR1_SPINES
 ansible_facts:
   switch:
-    type: l3leaf
-    node_type_key: l3leaf
-    connected_endpoints: true
-    default_evpn_role: client
-    mlag_support: true
-    network_services_l2: true
-    network_services_l3: true
+    type: spine
+    node_type_key: spine
+    connected_endpoints: false
+    default_evpn_role: server
+    mlag_support: false
+    network_services_l2: false
+    network_services_l3: false
     underlay_router: true
     uplink_type: p2p
-    vtep: true
+    vtep: false
     ip_addressing:
       router_id: ip_addressing/router-id.j2
       mlag_ip_primary: ip_addressing/mlag-ip-primary.j2
@@ -207,9 +153,8 @@ ansible_facts:
       connected_endpoints_port_channel_interfaces: interface_descriptions/connected_endpoints/port-channel-interfaces.j2
       overlay_loopback_interface: interface_descriptions/loopback_interfaces/overlay-loopback.j2
       vtep_loopback_interface: interface_descriptions/loopback_interfaces/vtep-loopback.j2
-    group: KR1_LEAF2
-    id: 3
-    mgmt_ip: 10.183.0.15/24
+    id: 2
+    mgmt_ip: 10.183.0.12/24
     platform: vEOS-LAB
     platform_settings:
       platforms:
@@ -222,91 +167,34 @@ ansible_facts:
     mgmt_interface: Management1
     underlay_routing_protocol: ebgp
     overlay_routing_protocol: ebgp
-    filter_tenants:
-    - all
-    filter_tags:
-    - 10LAN
-    spanning_tree_mode: rapid-pvst
-    spanning_tree_priority: 16384
-    igmp_snooping_enabled: true
-    virtual_router_mac_address: 00:1c:73:00:dc:11
-    max_uplink_switches: 2
+    spanning_tree_mode: none
+    max_uplink_switches: 0
     max_parallel_uplinks: 1
-    uplink_switches:
-    - KR1-SPINE1
-    - KR1-SPINE2
-    uplink_switch_interfaces:
-    - Ethernet3
-    - Ethernet3
-    uplink_interfaces:
-    - Ethernet1
-    - Ethernet2
     loopback_ipv4_pool: 10.100.0.0/24
-    loopback_ipv4_offset: 2
-    uplink_ipv4_pool: 10.172.0.0/24
-    router_id: 10.100.0.5
-    bgp_as: '65102'
+    loopback_ipv4_offset: 0
+    router_id: 10.100.0.2
+    bgp_as: '65001'
     bgp_defaults:
     - no bgp default ipv4-unicast
     - distance bgp 20 200 200
     - graceful-restart restart-time 300
     - graceful-restart
-    evpn_role: client
-    evpn_route_servers:
-    - KR1-SPINE1
-    - KR1-SPINE2
+    evpn_role: server
     mlag: false
-    vtep_loopback_ipv4_pool: 10.100.1.0/24
-    vtep_loopback: Loopback1
-    vtep_ip: 10.100.1.5
-    tenants:
-      Tenant_A:
-        vrfs:
-          10LAN_Zone:
-            svis:
-            - 120
-          OP_Zone:
-            svis:
-            - 110
-        l2vlans: []
-    vlans:
-    - 120
-    - 110
   topology:
-    links:
-      Ethernet1:
-        peer: KR1-SPINE1
-        peer_interface: Ethernet3
-        peer_type: spine
-        peer_bgp_as: '65001'
-        type: underlay_p2p
-        ip_address: 10.172.0.9
-        peer_ip_address: 10.172.0.8
-      Ethernet2:
-        peer: KR1-SPINE2
-        peer_interface: Ethernet3
-        peer_type: spine
-        peer_bgp_as: '65001'
-        type: underlay_p2p
-        ip_address: 10.172.0.11
-        peer_ip_address: 10.172.0.10
-    peers:
-    - KR1-SPINE1
-    - KR1-SPINE2
-    vlans:
-    - 120
-    - 110
+    peers: []
+    vlans: []
 switch:
-  type: l3leaf
-  node_type_key: l3leaf
-  connected_endpoints: true
-  default_evpn_role: client
-  mlag_support: true
-  network_services_l2: true
-  network_services_l3: true
+  type: spine
+  node_type_key: spine
+  connected_endpoints: false
+  default_evpn_role: server
+  mlag_support: false
+  network_services_l2: false
+  network_services_l3: false
   underlay_router: true
   uplink_type: p2p
-  vtep: true
+  vtep: false
   ip_addressing:
     router_id: ip_addressing/router-id.j2
     mlag_ip_primary: ip_addressing/mlag-ip-primary.j2
@@ -326,9 +214,8 @@ switch:
     connected_endpoints_port_channel_interfaces: interface_descriptions/connected_endpoints/port-channel-interfaces.j2
     overlay_loopback_interface: interface_descriptions/loopback_interfaces/overlay-loopback.j2
     vtep_loopback_interface: interface_descriptions/loopback_interfaces/vtep-loopback.j2
-  group: KR1_LEAF2
-  id: 3
-  mgmt_ip: 10.183.0.15/24
+  id: 2
+  mgmt_ip: 10.183.0.12/24
   platform: vEOS-LAB
   platform_settings:
     platforms:
@@ -341,80 +228,23 @@ switch:
   mgmt_interface: Management1
   underlay_routing_protocol: ebgp
   overlay_routing_protocol: ebgp
-  filter_tenants:
-  - all
-  filter_tags:
-  - 10LAN
-  spanning_tree_mode: rapid-pvst
-  spanning_tree_priority: 16384
-  igmp_snooping_enabled: true
-  virtual_router_mac_address: 00:1c:73:00:dc:11
-  max_uplink_switches: 2
+  spanning_tree_mode: none
+  max_uplink_switches: 0
   max_parallel_uplinks: 1
-  uplink_switches:
-  - KR1-SPINE1
-  - KR1-SPINE2
-  uplink_switch_interfaces:
-  - Ethernet3
-  - Ethernet3
-  uplink_interfaces:
-  - Ethernet1
-  - Ethernet2
   loopback_ipv4_pool: 10.100.0.0/24
-  loopback_ipv4_offset: 2
-  uplink_ipv4_pool: 10.172.0.0/24
-  router_id: 10.100.0.5
-  bgp_as: '65102'
+  loopback_ipv4_offset: 0
+  router_id: 10.100.0.2
+  bgp_as: '65001'
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
   - graceful-restart restart-time 300
   - graceful-restart
-  evpn_role: client
-  evpn_route_servers:
-  - KR1-SPINE1
-  - KR1-SPINE2
+  evpn_role: server
   mlag: false
-  vtep_loopback_ipv4_pool: 10.100.1.0/24
-  vtep_loopback: Loopback1
-  vtep_ip: 10.100.1.5
-  tenants:
-    Tenant_A:
-      vrfs:
-        10LAN_Zone:
-          svis:
-          - 120
-        OP_Zone:
-          svis:
-          - 110
-      l2vlans: []
-  vlans:
-  - 120
-  - 110
 topology:
-  links:
-    Ethernet1:
-      peer: KR1-SPINE1
-      peer_interface: Ethernet3
-      peer_type: spine
-      peer_bgp_as: '65001'
-      type: underlay_p2p
-      ip_address: 10.172.0.9
-      peer_ip_address: 10.172.0.8
-    Ethernet2:
-      peer: KR1-SPINE2
-      peer_interface: Ethernet3
-      peer_type: spine
-      peer_bgp_as: '65001'
-      type: underlay_p2p
-      ip_address: 10.172.0.11
-      peer_ip_address: 10.172.0.10
-  peers:
-  - KR1-SPINE1
-  - KR1-SPINE2
-  vlans:
-  - 120
-  - 110
+  peers: []
+  vlans: []
 playbook_dir: /home/avd/ansible-avd-cloudvision-demo/playbooks
 ansible_playbook_python: /usr/local/bin/python
 ansible_config_file: /home/avd/ansible-avd-cloudvision-demo/ansible.cfg

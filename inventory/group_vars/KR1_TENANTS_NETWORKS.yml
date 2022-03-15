@@ -1,6 +1,14 @@
 ---
 # KR1 Tenants Networks
 # Documentation of Tenant specific information - Vlans/VRFs
+
+# Internal vlan allocation order and range | Required
+internal_vlan_order:
+  allocation: ascending
+  range:
+    beginning: 3900
+    ending: 4000
+
 tenants:
   # Tenant A Specific Information - VRFs / VLANs
   Tenant_A:
