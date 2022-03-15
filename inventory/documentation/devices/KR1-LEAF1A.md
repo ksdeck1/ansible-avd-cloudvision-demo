@@ -1,4 +1,4 @@
-# DC1-LEAF1A
+# KR1-LEAF1A
 # Table of Contents
 
 - [Management](#management)
@@ -131,14 +131,14 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
-| 110 | Tenant_A_OP_Zone_1 | - |
+| 110 | OP_Zone_1 | - |
 
 ## VLANs Device Configuration
 
 ```eos
 !
 vlan 110
-   name Tenant_A_OP_Zone_1
+   name OP_Zone_1
 ```
 
 # Interfaces
@@ -183,13 +183,13 @@ interface Loopback1
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan110 |  Tenant_A_OP_Zone_1  |  Tenant_A_OP_Zone  |  -  |  false  |
+| Vlan110 |  OP_Zone_1  |  OP_Zone  |  -  |  false  |
 
 #### IPv4
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan110 |  Tenant_A_OP_Zone  |  10.1.10.2/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
+| Vlan110 |  OP_Zone  |  10.1.10.2/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
 
 
 ### VLAN Interfaces Device Configuration
@@ -197,9 +197,9 @@ interface Loopback1
 ```eos
 !
 interface Vlan110
-   description Tenant_A_OP_Zone_1
+   description OP_Zone_1
    no shutdown
-   vrf Tenant_A_OP_Zone
+   vrf OP_Zone
    ip address 10.1.10.2/24
    ip virtual-router address 10.1.10.1
 ```
@@ -223,18 +223,18 @@ interface Vlan110
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| Tenant_A_OP_Zone | 10 | - |
+| OP_Zone | 10 | - |
 
 ### VXLAN Interface Device Configuration
 
 ```eos
 !
 interface Vxlan1
-   description DC1-LEAF1A_VTEP
+   description KR1-LEAF1A_VTEP
    vxlan source-interface Loopback1
    vxlan udp-port 4789
    vxlan vlan 110 vni 10110
-   vxlan vrf Tenant_A_OP_Zone vni 10
+   vxlan vrf OP_Zone vni 10
 ```
 
 # Routing
@@ -268,7 +268,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:11
 | --- | --------------- |
 | default | true |
 | MGMT | false |
-| Tenant_A_OP_Zone | true |
+| OP_Zone | true |
 
 ### IP Routing Device Configuration
 
@@ -276,7 +276,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:11
 !
 ip routing
 no ip routing vrf MGMT
-ip routing vrf Tenant_A_OP_Zone
+ip routing vrf OP_Zone
 ```
 ## IPv6 Routing
 
@@ -286,7 +286,7 @@ ip routing vrf Tenant_A_OP_Zone
 | --- | --------------- |
 | default | false |
 | MGMT | false |
-| Tenant_A_OP_Zone | false |
+| OP_Zone | false |
 
 ## Static Routes
 
@@ -352,13 +352,13 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Tenant_A_OP_Zone | 10.100.0.3:10 | 10:10 | - | - | learned | 110 |
+| OP_Zone | 10.100.0.3:10 | 10:10 | - | - | learned | 110 |
 
 ### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| Tenant_A_OP_Zone | 10.100.0.3:10 | connected |
+| OP_Zone | 10.100.0.3:10 | connected |
 
 ### Router BGP Device Configuration
 
@@ -382,7 +382,7 @@ router bgp 65101
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    redistribute connected route-map RM-CONN-2-BGP
    !
-   vlan-aware-bundle Tenant_A_OP_Zone
+   vlan-aware-bundle OP_Zone
       rd 10.100.0.3:10
       route-target both 10:10
       redistribute learned
@@ -395,7 +395,7 @@ router bgp 65101
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
    !
-   vrf Tenant_A_OP_Zone
+   vrf OP_Zone
       rd 10.100.0.3:10
       route-target import evpn 10:10
       route-target export evpn 10:10
@@ -485,7 +485,7 @@ route-map RM-CONN-2-BGP permit 10
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | MGMT | disabled |
-| Tenant_A_OP_Zone | enabled |
+| OP_Zone | enabled |
 
 ## VRF Instances Device Configuration
 
@@ -493,7 +493,7 @@ route-map RM-CONN-2-BGP permit 10
 !
 vrf instance MGMT
 !
-vrf instance Tenant_A_OP_Zone
+vrf instance OP_Zone
 ```
 
 # Quality Of Service

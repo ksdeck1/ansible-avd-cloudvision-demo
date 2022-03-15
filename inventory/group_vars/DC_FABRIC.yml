@@ -2,22 +2,11 @@
 # L3LS Fabric Values - update these values with caution,
 # SOME CHANGES COULD BE DISRUPTIVE.
 
-fabric_name: DC1_FABRIC
-
+fabric_name: DC_FABRIC
+#dc_name: KR1
 # Enable vlan aware bundles
 vxlan_vlan_aware_bundles: true
 
-# Spine Switches
-spine:
-  defaults:
-    platform: vEOS-LAB
-    bgp_as: 65001
-    loopback_ipv4_pool: 10.100.0.0/24
-    bgp_defaults:
-      - 'no bgp default ipv4-unicast'
-      - 'distance bgp 20 200 200'
-      - 'graceful-restart restart-time 300'
-      - 'graceful-restart'
 
 # Leaf switch groups
 # A maximum of two nodes can form a leaf group
@@ -29,9 +18,7 @@ l3leaf:
     loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
     vtep_loopback_ipv4_pool: 10.100.1.0/24
-    mlag_interfaces: [ Ethernet3, Ethernet4 ]
-    mlag_peer_ipv4_pool: 10.192.0.0/24
-    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
+    mlag: false
     virtual_router_mac_address: 00:1c:73:00:dc:11
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
@@ -41,19 +28,29 @@ l3leaf:
     spanning_tree_mode: rapid-pvst
     spanning_tree_priority: 16384
   node_groups:
-    DC1_LEAF1:
+    KR1_LEAF1:
+    # Filter L3 and L2 network services based on tenant and tags (and operation filter) | Optional
+    # If filter is not defined will default to all
+      filter:
+        tags: [ Public ]
+  # tenants: [ < tenant_1 >, < tenant_2 > | default all ]
+  # tags: [ < tag_1 >, < tag_2 > | default -> all ]
       bgp_as: 65101
       nodes:
-        DC1-LEAF1A:
+        KR1-LEAF1A:
           id: 1
-        DC1-LEAF1B:
+        KR1-LEAF1B:
           id: 2
-    DC1_LEAF2:
+    # Filter L3 and L2 network services based on tenant and tags (and operation filter) | Optional
+    # If filter is not defined will default to all
+    KR1_LEAF2:
+      filter:
+        tags: [ 10LAN ]
       bgp_as: 65102
       nodes:
-        DC1-LEAF2A:
+        KR1-LEAF2A:
           id: 3
-        DC1-LEAF2B:
+        KR1-LEAF2B:
           id: 4
 
 
@@ -78,5 +75,5 @@ bfd_multihop:
 
 # cv_configlets:
 #   containers:
-#     DC1_L3LEAFS:
+#     KR1_L3LEAFS:
 #       - ASE_GLOBAL-ALIASES

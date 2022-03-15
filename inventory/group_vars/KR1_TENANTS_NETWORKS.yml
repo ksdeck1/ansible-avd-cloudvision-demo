@@ -1,0 +1,55 @@
+---
+# KR1 Tenants Networks
+# Documentation of Tenant specific information - Vlans/VRFs
+tenants:
+  # Tenant A Specific Information - VRFs / VLANs
+  Tenant_A:
+    mac_vrf_vni_base: 10000
+    enable_mlag_ibgp_peering_vrfs: false
+    vrfs:
+      OP_Zone:
+        vrf_vni: 10
+        svis:
+          110:
+            name: OP_Zone_1
+            tags: [Public,10LAN]
+            enabled: true
+            ip_virtual_router_addresses:
+              - 10.1.10.1
+            nodes:
+              KR1-LEAF1A:
+                ip_address: 10.1.10.2/24
+              KR1-LEAF1B:
+                ip_address: 10.1.10.3/24
+              KR1-LEAF2A:
+                ip_address: 10.1.10.2/24
+              KR1-LEAF2B:
+                ip_address: 10.1.10.3/24
+              KR1-LEAF3A:
+                ip_address: 10.1.10.2/24
+              KR1-LEAF3B:
+                ip_address: 10.1.10.3/24
+
+      10LAN_Zone:
+        vrf_vni: 20
+        svis:
+          120:
+            name: 10LAN_Zone_1
+            tags: [10LAN]
+            enabled: true
+            ip_virtual_router_addresses:
+              - 10.1.20.1
+            nodes:
+              KR1-LEAF1A:
+                ip_address: 10.1.20.2/24
+              KR1-LEAF1B:
+                ip_address: 10.1.20.3/24
+              KR1-LEAF2A:
+                ip_address: 10.1.20.2/24
+              KR1-LEAF2B:
+                ip_address: 10.1.20.3/24
+              KR1-LEAF3A:
+                ip_address: 10.1.20.2/24
+              KR1-LEAF3B:
+                ip_address: 10.1.20.3/24
+

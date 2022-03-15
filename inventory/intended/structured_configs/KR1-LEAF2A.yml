@@ -1,0 +1,194 @@
+router_bgp:
+  as: '65102'
+  router_id: 10.100.0.5
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      send_community: all
+      maximum_routes: 0
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+  vrfs:
+    10LAN_Zone:
+      router_id: 10.100.0.5
+      rd: 10.100.0.5:20
+      route_targets:
+        import:
+          evpn:
+          - '20:20'
+        export:
+          evpn:
+          - '20:20'
+      redistribute_routes:
+      - connected
+    OP_Zone:
+      router_id: 10.100.0.5
+      rd: 10.100.0.5:10
+      route_targets:
+        import:
+          evpn:
+          - '10:10'
+        export:
+          evpn:
+          - '10:10'
+      redistribute_routes:
+      - connected
+  vlan_aware_bundles:
+    10LAN_Zone:
+      rd: 10.100.0.5:20
+      route_targets:
+        both:
+        - '20:20'
+      redistribute_routes:
+      - learned
+      vlan: 120
+    OP_Zone:
+      rd: 10.100.0.5:10
+      route_targets:
+        both:
+        - '10:10'
+      redistribute_routes:
+      - learned
+      vlan: 110
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 10.183.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: rapid-pvst
+  rapid_pvst_instances:
+    1-4094:
+      priority: 16384
+local_users:
+  admin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
+  ansible:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+vrfs:
+  MGMT:
+    ip_routing: false
+  10LAN_Zone:
+    tenant: Tenant_A
+    ip_routing: true
+  OP_Zone:
+    tenant: Tenant_A
+    ip_routing: true
+management_api_http:
+  enable_vrfs:
+    MGMT: {}
+  enable_https: true
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 10.100.0.5/32
+  Loopback1:
+    description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
+    ip_address: 10.100.1.5/32
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 10.100.0.0/24 eq 32
+      20:
+        action: permit 10.100.1.0/24 eq 32
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
+vlans:
+  120:
+    tenant: Tenant_A
+    name: 10LAN_Zone_1
+  110:
+    tenant: Tenant_A
+    name: OP_Zone_1
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:11
+vlan_interfaces:
+  Vlan120:
+    tenant: Tenant_A
+    tags:
+    - 10LAN
+    description: 10LAN_Zone_1
+    shutdown: false
+    vrf: 10LAN_Zone
+    ip_address: 10.1.20.2/24
+    ip_virtual_router_addresses:
+    - 10.1.20.1
+  Vlan110:
+    tenant: Tenant_A
+    tags:
+    - Public
+    - 10LAN
+    description: OP_Zone_1
+    shutdown: false
+    vrf: OP_Zone
+    ip_address: 10.1.10.2/24
+    ip_virtual_router_addresses:
+    - 10.1.10.1
+vxlan_interface:
+  Vxlan1:
+    description: KR1-LEAF2A_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
+      vlans:
+        120:
+          vni: 10120
+        110:
+          vni: 10110
+      vrfs:
+        10LAN_Zone:
+          vni: 20
+        OP_Zone:
+          vni: 10

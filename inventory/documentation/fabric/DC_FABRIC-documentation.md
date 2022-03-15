@@ -1,4 +1,4 @@
-# DC1_FABRIC
+# DC_FABRIC
 
 # Table of Contents
 
@@ -17,10 +17,10 @@
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- |
-| DC1_FABRIC | l3leaf | DC1-LEAF1A | - | vEOS-LAB | Provisioned |
-| DC1_FABRIC | l3leaf | DC1-LEAF1B | - | vEOS-LAB | Provisioned |
-| DC1_FABRIC | l3leaf | DC1-LEAF2A | - | vEOS-LAB | Provisioned |
-| DC1_FABRIC | l3leaf | DC1-LEAF2B | - | vEOS-LAB | Provisioned |
+| DC_FABRIC | l3leaf | KR1-LEAF1A | - | vEOS-LAB | Provisioned |
+| DC_FABRIC | l3leaf | KR1-LEAF1B | - | vEOS-LAB | Provisioned |
+| DC_FABRIC | l3leaf | KR1-LEAF2A | - | vEOS-LAB | Provisioned |
+| DC_FABRIC | l3leaf | KR1-LEAF2B | - | vEOS-LAB | Provisioned |
 
 > Provision status is based on Ansible inventory declaration and do not represent real status from CloudVision.
 
@@ -55,10 +55,10 @@
 
 | POD | Node | Loopback0 |
 | --- | ---- | --------- |
-| DC1_FABRIC | DC1-LEAF1A | 10.100.0.3/32 |
-| DC1_FABRIC | DC1-LEAF1B | 10.100.0.4/32 |
-| DC1_FABRIC | DC1-LEAF2A | 10.100.0.5/32 |
-| DC1_FABRIC | DC1-LEAF2B | 10.100.0.6/32 |
+| DC_FABRIC | KR1-LEAF1A | 10.100.0.3/32 |
+| DC_FABRIC | KR1-LEAF1B | 10.100.0.4/32 |
+| DC_FABRIC | KR1-LEAF2A | 10.100.0.5/32 |
+| DC_FABRIC | KR1-LEAF2B | 10.100.0.6/32 |
 
 ## VTEP Loopback VXLAN Tunnel Source Interfaces (VTEPs Only)
 
@@ -70,7 +70,7 @@
 
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |
-| DC1_FABRIC | DC1-LEAF1A | 10.100.1.3/32 |
-| DC1_FABRIC | DC1-LEAF1B | 10.100.1.4/32 |
-| DC1_FABRIC | DC1-LEAF2A | 10.100.1.5/32 |
-| DC1_FABRIC | DC1-LEAF2B | 10.100.1.6/32 |
+| DC_FABRIC | KR1-LEAF1A | 10.100.1.3/32 |
+| DC_FABRIC | KR1-LEAF1B | 10.100.1.4/32 |
+| DC_FABRIC | KR1-LEAF2A | 10.100.1.5/32 |
+| DC_FABRIC | KR1-LEAF2B | 10.100.1.6/32 |
