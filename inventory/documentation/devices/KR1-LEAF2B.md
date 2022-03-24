@@ -195,13 +195,13 @@ spanning-tree vlan-id 1-4094 priority 16384
 
 | Policy Allocation | Range Beginning | Range Ending |
 | ------------------| --------------- | ------------ |
-| ascending | 1006 | 1199 |
+| ascending | 3900 | 4000 |
 
 ## Internal VLAN Allocation Policy Configuration
 
 ```eos
 !
-vlan internal order ascending range 1006 1199
+vlan internal order ascending range 3900 4000
 ```
 
 # VLANs

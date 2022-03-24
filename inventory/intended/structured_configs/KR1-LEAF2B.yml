@@ -122,8 +122,8 @@ daemon_terminattr:
 vlan_internal_order:
   allocation: ascending
   range:
-    beginning: 1006
-    ending: 1199
+    beginning: 3900
+    ending: 4000
 spanning_tree:
   mode: rapid-pvst
   rapid_pvst_instances:

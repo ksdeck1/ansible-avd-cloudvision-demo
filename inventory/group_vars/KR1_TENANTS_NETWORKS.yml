@@ -61,3 +61,25 @@ tenants:
               KR1-LEAF3B:
                 ip_address: 10.1.20.3/24
 
+      10LANTEST_Zone:
+        vrf_vni: 30
+        svis:
+          130:
+            name: 10LAN_Zone_1
+            tags: [Public]
+            enabled: true
+            ip_virtual_router_addresses:
+              - 10.1.30.1
+            nodes:
+              KR1-LEAF1A:
+                ip_address: 10.1.30.2/24
+              KR1-LEAF1B:
+                ip_address: 10.1.30.3/24
+              KR1-LEAF2A:
+                ip_address: 10.1.30.2/24
+              KR1-LEAF2B:
+                ip_address: 10.1.30.3/24
+              KR1-LEAF3A:
+                ip_address: 10.1.30.2/24
+              KR1-LEAF3B:
+                ip_address: 10.1.30.3/24

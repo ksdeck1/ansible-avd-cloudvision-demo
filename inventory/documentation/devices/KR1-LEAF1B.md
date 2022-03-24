@@ -195,13 +195,13 @@ spanning-tree vlan-id 1-4094 priority 16384
 
 | Policy Allocation | Range Beginning | Range Ending |
 | ------------------| --------------- | ------------ |
-| ascending | 1006 | 1199 |
+| ascending | 3900 | 4000 |
 
 ## Internal VLAN Allocation Policy Configuration
 
 ```eos
 !
-vlan internal order ascending range 1006 1199
+vlan internal order ascending range 3900 4000
 ```
 
 # VLANs
@@ -211,6 +211,7 @@ vlan internal order ascending range 1006 1199
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
 | 110 | OP_Zone_1 | - |
+| 130 | 10LAN_Zone_1 | - |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -220,6 +221,9 @@ vlan internal order ascending range 1006 1199
 !
 vlan 110
    name OP_Zone_1
+!
+vlan 130
+   name 10LAN_Zone_1
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -346,6 +350,7 @@ interface Loopback1
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan110 |  OP_Zone_1  |  OP_Zone  |  -  |  false  |
+| Vlan130 |  10LAN_Zone_1  |  10LANTEST_Zone  |  -  |  false  |
 | Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  1500  |  false  |
 | Vlan4094 |  MLAG_PEER  |  default  |  1500  |  false  |
 
@@ -354,6 +359,7 @@ interface Loopback1
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan110 |  OP_Zone  |  10.1.10.3/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
+| Vlan130 |  10LANTEST_Zone  |  10.1.30.3/24  |  -  |  10.1.30.1  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.192.1.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.192.0.1/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -368,6 +374,13 @@ interface Vlan110
    vrf OP_Zone
    ip address 10.1.10.3/24
    ip virtual-router address 10.1.10.1
+!
+interface Vlan130
+   description 10LAN_Zone_1
+   no shutdown
+   vrf 10LANTEST_Zone
+   ip address 10.1.30.3/24
+   ip virtual-router address 10.1.30.1
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -398,11 +411,13 @@ interface Vlan4094
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
 | 110 | 10110 | - | - |
+| 130 | 10130 | - | - |
 
 #### VRF to VNI and Multicast Group Mappings
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
+| 10LANTEST_Zone | 30 | - |
 | OP_Zone | 10 | - |
 
 ### VXLAN Interface Device Configuration
@@ -415,6 +430,8 @@ interface Vxlan1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
    vxlan vlan 110 vni 10110
+   vxlan vlan 130 vni 10130
+   vxlan vrf 10LANTEST_Zone vni 30
    vxlan vrf OP_Zone vni 10
 ```
 
@@ -448,6 +465,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:11
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | true |
+| 10LANTEST_Zone | true |
 | MGMT | false |
 | OP_Zone | true |
 
@@ -456,6 +474,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:11
 ```eos
 !
 ip routing
+ip routing vrf 10LANTEST_Zone
 no ip routing vrf MGMT
 ip routing vrf OP_Zone
 ```
@@ -466,6 +485,7 @@ ip routing vrf OP_Zone
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | false |
+| 10LANTEST_Zone | false |
 | MGMT | false |
 | OP_Zone | false |
 
@@ -553,12 +573,14 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
+| 10LANTEST_Zone | 10.100.0.4:30 | 30:30 | - | - | learned | 130 |
 | OP_Zone | 10.100.0.4:10 | 10:10 | - | - | learned | 110 |
 
 ### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
+| 10LANTEST_Zone | 10.100.0.4:30 | connected |
 | OP_Zone | 10.100.0.4:10 | connected |
 
 ### Router BGP Device Configuration
@@ -603,6 +625,12 @@ router bgp 65101
    neighbor 10.192.1.0 description KR1-LEAF1A
    redistribute connected route-map RM-CONN-2-BGP
    !
+   vlan-aware-bundle 10LANTEST_Zone
+      rd 10.100.0.4:30
+      route-target both 30:30
+      redistribute learned
+      vlan 130
+   !
    vlan-aware-bundle OP_Zone
       rd 10.100.0.4:10
       route-target both 10:10
@@ -616,6 +644,13 @@ router bgp 65101
       neighbor MLAG activate
       no neighbor Overlay activate
       neighbor Underlay activate
+   !
+   vrf 10LANTEST_Zone
+      rd 10.100.0.4:30
+      route-target import evpn 30:30
+      route-target export evpn 30:30
+      router-id 10.100.0.4
+      redistribute connected
    !
    vrf OP_Zone
       rd 10.100.0.4:10
@@ -716,12 +751,15 @@ route-map RM-MLAG-PEER-IN permit 10
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
+| 10LANTEST_Zone | enabled |
 | MGMT | disabled |
 | OP_Zone | enabled |
 
 ## VRF Instances Device Configuration
 
 ```eos
+!
+vrf instance 10LANTEST_Zone
 !
 vrf instance MGMT
 !

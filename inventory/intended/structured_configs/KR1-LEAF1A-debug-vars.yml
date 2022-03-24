@@ -23,6 +23,8 @@ local_users:
 mgmt_interface: Management1
 mgmt_interface_vrf: MGMT
 mgmt_gateway: 10.183.0.1
+cvp_instance_ip: 10.183.0.1
+cvp_ingestauth_key: ''
 fabric_name: DC_FABRIC
 vxlan_vlan_aware_bundles: true
 bgp_peer_groups:
@@ -43,6 +45,8 @@ spine:
     - distance bgp 20 200 200
     - graceful-restart restart-time 300
     - graceful-restart
+    spanning_tree_mode: rapid-pvst
+    spanning_tree_priority: 16384
   nodes:
     KR1-SPINE1:
       id: 1
@@ -56,7 +60,11 @@ l3leaf:
     loopback_ipv4_pool: 10.100.0.0/24
     loopback_ipv4_offset: 2
     vtep_loopback_ipv4_pool: 10.100.1.0/24
-    mlag: false
+    mlag_interfaces:
+    - Ethernet3
+    - Ethernet4
+    mlag_peer_ipv4_pool: 10.192.0.0/24
+    mlag_peer_l3_ipv4_pool: 10.192.1.0/24
     virtual_router_mac_address: 00:1c:73:00:dc:11
     bgp_defaults:
     - no bgp default ipv4-unicast
@@ -114,6 +122,11 @@ bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
+internal_vlan_order:
+  allocation: ascending
+  range:
+    beginning: 3900
+    ending: 4000
 tenants:
   Tenant_A:
     mac_vrf_vni_base: 10000
@@ -166,6 +179,29 @@ tenants:
                 ip_address: 10.1.20.2/24
               KR1-LEAF3B:
                 ip_address: 10.1.20.3/24
+      10LANTEST_Zone:
+        vrf_vni: 30
+        svis:
+          130:
+            name: 10LAN_Zone_1
+            tags:
+            - Public
+            enabled: true
+            ip_virtual_router_addresses:
+            - 10.1.30.1
+            nodes:
+              KR1-LEAF1A:
+                ip_address: 10.1.30.2/24
+              KR1-LEAF1B:
+                ip_address: 10.1.30.3/24
+              KR1-LEAF2A:
+                ip_address: 10.1.30.2/24
+              KR1-LEAF2B:
+                ip_address: 10.1.30.3/24
+              KR1-LEAF3A:
+                ip_address: 10.1.30.2/24
+              KR1-LEAF3B:
+                ip_address: 10.1.30.3/24
 inventory_file: /home/avd/ansible-avd-cloudvision-demo/inventory/inventory.yml
 inventory_dir: /home/avd/ansible-avd-cloudvision-demo/inventory
 inventory_hostname: KR1-LEAF1A
@@ -255,18 +291,39 @@ ansible_facts:
     evpn_route_servers:
     - KR1-SPINE1
     - KR1-SPINE2
-    mlag: false
+    mlag: true
+    mlag_group: KR1_LEAF1
+    mlag_ibgp_origin_incomplete: true
+    mlag_peer_vlan: 4094
+    mlag_peer_link_allowed_vlans: 2-4094
+    mlag_dual_primary_detection: false
+    mlag_interfaces:
+    - Ethernet3
+    - Ethernet4
+    mlag_l3: true
+    mlag_peer_l3_vlan: 4093
+    mlag_role: primary
+    mlag_peer: KR1-LEAF1B
+    mlag_peer_mgmt_ip: 10.183.0.14
+    mlag_ip: 10.192.0.0
+    mlag_peer_ip: 10.192.0.1
+    mlag_l3_ip: 10.192.1.0
+    mlag_peer_l3_ip: 10.192.1.1
     vtep_loopback_ipv4_pool: 10.100.1.0/24
     vtep_loopback: Loopback1
     vtep_ip: 10.100.1.3
     tenants:
       Tenant_A:
         vrfs:
+          10LANTEST_Zone:
+            svis:
+            - 130
           OP_Zone:
             svis:
             - 110
         l2vlans: []
     vlans:
+    - 130
     - 110
   topology:
     links:
@@ -290,6 +347,7 @@ ansible_facts:
     - KR1-SPINE1
     - KR1-SPINE2
     vlans:
+    - 130
     - 110
 switch:
   type: l3leaf
@@ -369,18 +427,39 @@ switch:
   evpn_route_servers:
   - KR1-SPINE1
   - KR1-SPINE2
-  mlag: false
+  mlag: true
+  mlag_group: KR1_LEAF1
+  mlag_ibgp_origin_incomplete: true
+  mlag_peer_vlan: 4094
+  mlag_peer_link_allowed_vlans: 2-4094
+  mlag_dual_primary_detection: false
+  mlag_interfaces:
+  - Ethernet3
+  - Ethernet4
+  mlag_l3: true
+  mlag_peer_l3_vlan: 4093
+  mlag_role: primary
+  mlag_peer: KR1-LEAF1B
+  mlag_peer_mgmt_ip: 10.183.0.14
+  mlag_ip: 10.192.0.0
+  mlag_peer_ip: 10.192.0.1
+  mlag_l3_ip: 10.192.1.0
+  mlag_peer_l3_ip: 10.192.1.1
   vtep_loopback_ipv4_pool: 10.100.1.0/24
   vtep_loopback: Loopback1
   vtep_ip: 10.100.1.3
   tenants:
     Tenant_A:
       vrfs:
+        10LANTEST_Zone:
+          svis:
+          - 130
         OP_Zone:
           svis:
           - 110
       l2vlans: []
   vlans:
+  - 130
   - 110
 topology:
   links:
@@ -404,6 +483,7 @@ topology:
   - KR1-SPINE1
   - KR1-SPINE2
   vlans:
+  - 130
   - 110
 playbook_dir: /home/avd/ansible-avd-cloudvision-demo/playbooks
 ansible_playbook_python: /usr/local/bin/python
@@ -456,7 +536,7 @@ groups:
   - KR1-LEAF2B
   - KR1-LEAF1A
   - KR1-LEAF1B
-omit: __omit_place_holder__5980ca216621cb92c5f1884b48e0adc3b56ae41f
+omit: __omit_place_holder__82244c5276a918a6abfc7b76f4a7d93b5dc66b45
 ansible_version:
   string: 2.10.8
   full: 2.10.8
