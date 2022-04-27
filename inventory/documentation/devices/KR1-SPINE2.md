@@ -171,14 +171,14 @@ vlan internal order ascending range 1006 1199
 
 *Inherited from Port-Channel Interface
 
-#### IPv4
+#### IPv6
 
-| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
-| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_KR1-LEAF1A_Ethernet2 | routed | - | 10.172.0.2/31 | default | 1500 | false | - | - |
-| Ethernet2 | P2P_LINK_TO_KR1-LEAF1B_Ethernet2 | routed | - | 10.172.0.6/31 | default | 1500 | false | - | - |
-| Ethernet3 | P2P_LINK_TO_KR1-LEAF2A_Ethernet2 | routed | - | 10.172.0.10/31 | default | 1500 | false | - | - |
-| Ethernet4 | P2P_LINK_TO_KR1-LEAF2B_Ethernet2 | routed | - | 10.172.0.14/31 | default | 1500 | false | - | - |
+| Interface | Description | Type | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
+| --------- | ----------- | ---- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
+| Ethernet1 | P2P_LINK_TO_KR1-LEAF1A_Ethernet2 | routed | - | - | default | 1500 | false | - | - | - | - |
+| Ethernet2 | P2P_LINK_TO_KR1-LEAF1B_Ethernet2 | routed | - | - | default | 1500 | false | - | - | - | - |
+| Ethernet3 | P2P_LINK_TO_KR1-LEAF2A_Ethernet2 | routed | - | - | default | 1500 | false | - | - | - | - |
+| Ethernet4 | P2P_LINK_TO_KR1-LEAF2B_Ethernet2 | routed | - | - | default | 1500 | false | - | - | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -189,28 +189,28 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.172.0.2/31
+   ipv6 enable
 !
 interface Ethernet2
    description P2P_LINK_TO_KR1-LEAF1B_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.172.0.6/31
+   ipv6 enable
 !
 interface Ethernet3
    description P2P_LINK_TO_KR1-LEAF2A_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.172.0.10/31
+   ipv6 enable
 !
 interface Ethernet4
    description P2P_LINK_TO_KR1-LEAF2B_Ethernet2
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.172.0.14/31
+   ipv6 enable
 ```
 
 ## Loopback Interfaces
@@ -272,8 +272,16 @@ no ip routing vrf MGMT
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | true |
 | MGMT | false |
+
+### IPv6 Routing Device Configuration
+
+```eos
+!
+ipv6 unicast-routing
+ip routing ipv6 interfaces
+```
 
 ## Static Routes
 
@@ -281,7 +289,7 @@ no ip routing vrf MGMT
 
 | VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
 | --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| MGMT  | 0.0.0.0/0 |  10.183.0.1  |  -  |  1  |  -  |  -  |  - |
+| MGMT | 0.0.0.0/0 | 10.183.0.1 | - | 1 | - | - | - |
 
 ### Static Routes Device Configuration
 
@@ -330,16 +338,21 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD |
-| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- |
-| 10.100.0.3 | 65101 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay |
-| 10.100.0.4 | 65101 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay |
-| 10.100.0.5 | 65102 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay |
-| 10.100.0.6 | 65102 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay |
-| 10.172.0.3 | 65101 | default | - | Inherited from peer group Underlay | Inherited from peer group Underlay | - | - |
-| 10.172.0.7 | 65101 | default | - | Inherited from peer group Underlay | Inherited from peer group Underlay | - | - |
-| 10.172.0.11 | 65102 | default | - | Inherited from peer group Underlay | Inherited from peer group Underlay | - | - |
-| 10.172.0.15 | 65102 | default | - | Inherited from peer group Underlay | Inherited from peer group Underlay | - | - |
+| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain |
+| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | -------------- |
+| 10.100.0.3 | 65101 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay | - |
+| 10.100.0.4 | 65101 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay | - |
+| 10.100.0.5 | 65102 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay | - |
+| 10.100.0.6 | 65102 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay | - |
+
+### BGP Neighbor Interfaces
+
+| Neighbor Interface | Peer Group | Remote AS | Peer Filter |
+| ------------------ | ---------- | --------- | ----------- |
+| Ethernet1 | Underlay | 65101 | - |
+| Ethernet2 | Underlay | 65101 | - |
+| Ethernet3 | Underlay | 65102 | - |
+| Ethernet4 | Underlay | 65102 | - |
 
 ### Router BGP EVPN Address Family
 
@@ -370,6 +383,10 @@ router bgp 65001
    neighbor Underlay peer group
    neighbor Underlay send-community
    neighbor Underlay maximum-routes 12000
+   neighbor interface Ethernet1 peer-group Underlay remote-as 65101
+   neighbor interface Ethernet2 peer-group Underlay remote-as 65101
+   neighbor interface Ethernet3 peer-group Underlay remote-as 65102
+   neighbor interface Ethernet4 peer-group Underlay remote-as 65102
    neighbor 10.100.0.3 peer group Overlay
    neighbor 10.100.0.3 remote-as 65101
    neighbor 10.100.0.3 description KR1-LEAF1A
@@ -382,18 +399,6 @@ router bgp 65001
    neighbor 10.100.0.6 peer group Overlay
    neighbor 10.100.0.6 remote-as 65102
    neighbor 10.100.0.6 description KR1-LEAF2B
-   neighbor 10.172.0.3 peer group Underlay
-   neighbor 10.172.0.3 remote-as 65101
-   neighbor 10.172.0.3 description KR1-LEAF1A_Ethernet2
-   neighbor 10.172.0.7 peer group Underlay
-   neighbor 10.172.0.7 remote-as 65101
-   neighbor 10.172.0.7 description KR1-LEAF1B_Ethernet2
-   neighbor 10.172.0.11 peer group Underlay
-   neighbor 10.172.0.11 remote-as 65102
-   neighbor 10.172.0.11 description KR1-LEAF2A_Ethernet2
-   neighbor 10.172.0.15 peer group Underlay
-   neighbor 10.172.0.15 remote-as 65102
-   neighbor 10.172.0.15 description KR1-LEAF2B_Ethernet2
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
@@ -401,6 +406,7 @@ router bgp 65001
    !
    address-family ipv4
       no neighbor Overlay activate
+      neighbor Underlay next-hop address-family ipv6 originate
       neighbor Underlay activate
 ```
 

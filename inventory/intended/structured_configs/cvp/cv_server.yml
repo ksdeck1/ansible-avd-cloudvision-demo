@@ -27,6 +27,8 @@ CVP_DEVICES:
 CVP_CONTAINERS:
   DC_FABRIC:
     parentContainerName: Tenant
+    configlets:
+      - ANET-KR_GLOBAL-ALIASES
   KR1_10LAN_L3LEAFS:
     parentContainerName: DC_FABRIC
   KR1_LEAF1:

@@ -53,20 +53,11 @@
 
 | Uplink IPv4 Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ---------------- | ------------------- | ------------------ | ------------------ |
-| 10.172.0.0/24 | 256 | 16 | 6.25 % |
 
 ## Point-To-Point Links Node Allocation
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
-| KR1-LEAF1A | Ethernet1 | 10.172.0.1/31 | KR1-SPINE1 | Ethernet1 | 10.172.0.0/31 |
-| KR1-LEAF1A | Ethernet2 | 10.172.0.3/31 | KR1-SPINE2 | Ethernet1 | 10.172.0.2/31 |
-| KR1-LEAF1B | Ethernet1 | 10.172.0.5/31 | KR1-SPINE1 | Ethernet2 | 10.172.0.4/31 |
-| KR1-LEAF1B | Ethernet2 | 10.172.0.7/31 | KR1-SPINE2 | Ethernet2 | 10.172.0.6/31 |
-| KR1-LEAF2A | Ethernet1 | 10.172.0.9/31 | KR1-SPINE1 | Ethernet3 | 10.172.0.8/31 |
-| KR1-LEAF2A | Ethernet2 | 10.172.0.11/31 | KR1-SPINE2 | Ethernet3 | 10.172.0.10/31 |
-| KR1-LEAF2B | Ethernet1 | 10.172.0.13/31 | KR1-SPINE1 | Ethernet4 | 10.172.0.12/31 |
-| KR1-LEAF2B | Ethernet2 | 10.172.0.15/31 | KR1-SPINE2 | Ethernet4 | 10.172.0.14/31 |
 
 ## Loopback Interfaces (BGP EVPN Peering)
 

@@ -24,28 +24,35 @@ router_bgp:
     peer_groups:
       Underlay:
         activate: true
+        next_hop:
+          address_family_ipv6_originate: true
       Overlay:
         activate: false
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
-  neighbors:
-    10.172.0.3:
+  neighbor_interfaces:
+    Ethernet1:
       peer_group: Underlay
       remote_as: '65101'
       description: KR1-LEAF1A_Ethernet2
-    10.172.0.7:
+    Ethernet2:
       peer_group: Underlay
       remote_as: '65101'
       description: KR1-LEAF1B_Ethernet2
-    10.172.0.11:
+    Ethernet3:
       peer_group: Underlay
       remote_as: '65102'
       description: KR1-LEAF2A_Ethernet2
-    10.172.0.15:
+    Ethernet4:
       peer_group: Underlay
       remote_as: '65102'
       description: KR1-LEAF2B_Ethernet2
+  address_family_evpn:
+    peer_groups:
+      Overlay:
+        activate: true
+  neighbors:
     10.100.0.3:
       peer_group: Overlay
       description: KR1-LEAF1A
@@ -62,16 +69,14 @@ router_bgp:
       peer_group: Overlay
       description: KR1-LEAF2B
       remote_as: '65102'
-  address_family_evpn:
-    peer_groups:
-      Overlay:
-        activate: true
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 10.183.0.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
 daemon_terminattr:
   cvaddrs:
   - 10.183.0.1:9910
@@ -126,7 +131,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 10.172.0.2/31
+    ipv6_enable: true
   Ethernet2:
     peer: KR1-LEAF1B
     peer_interface: Ethernet2
@@ -135,7 +140,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 10.172.0.6/31
+    ipv6_enable: true
   Ethernet3:
     peer: KR1-LEAF2A
     peer_interface: Ethernet2
@@ -144,7 +149,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 10.172.0.10/31
+    ipv6_enable: true
   Ethernet4:
     peer: KR1-LEAF2B
     peer_interface: Ethernet2
@@ -153,7 +158,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ip_address: 10.172.0.14/31
+    ipv6_enable: true
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering

@@ -19,6 +19,8 @@ all:
           ansible_httpapi_port: 443
           # Configuration to get Virtual Env information
           ansible_python_interpreter: $(which python3)
+          configlet_dir_var: ./configlets
+          configlets_prefix_var: ANET-KR
     # KR1_Fabric - EVPN Fabric running in home lab
     DC:
       children:

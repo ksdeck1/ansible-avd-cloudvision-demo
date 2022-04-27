@@ -147,7 +147,7 @@ daemon TerminAttr
 
 | Domain-id | Local-interface | Peer-address | Peer-link |
 | --------- | --------------- | ------------ | --------- |
-| KR1_LEAF2 | Vlan4094 | 10.192.0.5 | Port-Channel2000 |
+| KR1_LEAF2 | Vlan4094 | 10.192.0.5 | Port-Channel3 |
 
 Dual primary detection is disabled.
 
@@ -159,7 +159,7 @@ mlag configuration
    domain-id KR1_LEAF2
    local-interface Vlan4094
    peer-address 10.192.0.5
-   peer-link Port-Channel2000
+   peer-link Port-Channel3
    reload-delay mlag 300
    reload-delay non-mlag 330
 ```
@@ -244,17 +244,17 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet3 | MLAG_PEER_KR1-LEAF2B_Ethernet3 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 2000 |
-| Ethernet4 | MLAG_PEER_KR1-LEAF2B_Ethernet4 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 2000 |
+| Ethernet3 | MLAG_PEER_KR1-LEAF2B_Ethernet3 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 3 |
+| Ethernet4 | MLAG_PEER_KR1-LEAF2B_Ethernet4 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 3 |
 
 *Inherited from Port-Channel Interface
 
-#### IPv4
+#### IPv6
 
-| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
-| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_KR1-SPINE1_Ethernet3 | routed | - | 10.172.0.9/31 | default | 1500 | false | - | - |
-| Ethernet2 | P2P_LINK_TO_KR1-SPINE2_Ethernet3 | routed | - | 10.172.0.11/31 | default | 1500 | false | - | - |
+| Interface | Description | Type | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
+| --------- | ----------- | ---- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
+| Ethernet1 | P2P_LINK_TO_KR1-SPINE1_Ethernet3 | routed | - | - | default | 1500 | false | - | - | - | - |
+| Ethernet2 | P2P_LINK_TO_KR1-SPINE2_Ethernet3 | routed | - | - | default | 1500 | false | - | - | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -265,24 +265,24 @@ interface Ethernet1
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.172.0.9/31
+   ipv6 enable
 !
 interface Ethernet2
    description P2P_LINK_TO_KR1-SPINE2_Ethernet3
    no shutdown
    mtu 1500
    no switchport
-   ip address 10.172.0.11/31
+   ipv6 enable
 !
 interface Ethernet3
    description MLAG_PEER_KR1-LEAF2B_Ethernet3
    no shutdown
-   channel-group 2000 mode active
+   channel-group 3 mode active
 !
 interface Ethernet4
    description MLAG_PEER_KR1-LEAF2B_Ethernet4
    no shutdown
-   channel-group 2000 mode active
+   channel-group 3 mode active
 ```
 
 ## Port-Channel Interfaces
@@ -293,13 +293,13 @@ interface Ethernet4
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel2000 | MLAG_PEER_KR1-LEAF2B_Po3 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
+| Port-Channel3 | MLAG_PEER_KR1-LEAF2B_Po3 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
-interface Port-Channel2000
+interface Port-Channel3
    description MLAG_PEER_KR1-LEAF2B_Po3
    no shutdown
    switchport
@@ -349,10 +349,10 @@ interface Loopback1
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan110 |  OP_Zone_1  |  OP_Zone  |  -  |  false  |
-| Vlan120 |  10LAN_Zone_1  |  10LAN_Zone  |  -  |  false  |
-| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  1500  |  false  |
-| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  false  |
+| Vlan110 | OP_Zone_1 | OP_Zone | - | false |
+| Vlan120 | 10LAN_Zone_1 | 10LAN_Zone | - | false |
+| Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | false |
+| Vlan4094 | MLAG_PEER | default | 1500 | false |
 
 #### IPv4
 
@@ -360,7 +360,7 @@ interface Loopback1
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan110 |  OP_Zone  |  10.1.10.2/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
 | Vlan120 |  10LAN_Zone  |  10.1.20.2/24  |  -  |  10.1.20.1  |  -  |  -  |  -  |
-| Vlan4093 |  default  |  10.192.1.4/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  -  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.192.0.4/31  |  -  |  -  |  -  |  -  |  -  |
 
 
@@ -386,7 +386,7 @@ interface Vlan4093
    description MLAG_PEER_L3_PEERING
    no shutdown
    mtu 1500
-   ip address 10.192.1.4/31
+   ipv6 enable
 !
 interface Vlan4094
    description MLAG_PEER
@@ -484,10 +484,18 @@ ip routing vrf OP_Zone
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | true |
 | 10LAN_Zone | false |
 | MGMT | false |
 | OP_Zone | false |
+
+### IPv6 Routing Device Configuration
+
+```eos
+!
+ipv6 unicast-routing
+ip routing ipv6 interfaces
+```
 
 ## Static Routes
 
@@ -495,7 +503,7 @@ ip routing vrf OP_Zone
 
 | VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
 | --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| MGMT  | 0.0.0.0/0 |  10.183.0.1  |  -  |  1  |  -  |  -  |  - |
+| MGMT | 0.0.0.0/0 | 10.183.0.1 | - | 1 | - | - | - |
 
 ### Static Routes Device Configuration
 
@@ -553,13 +561,18 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD |
-| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- |
-| 10.100.0.1 | 65001 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay |
-| 10.100.0.2 | 65001 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay |
-| 10.172.0.8 | 65001 | default | - | Inherited from peer group Underlay | Inherited from peer group Underlay | - | - |
-| 10.172.0.10 | 65001 | default | - | Inherited from peer group Underlay | Inherited from peer group Underlay | - | - |
-| 10.192.1.5 | Inherited from peer group MLAG | default | - | Inherited from peer group MLAG | Inherited from peer group MLAG | - | - |
+| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain |
+| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | -------------- |
+| 10.100.0.1 | 65001 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay | - |
+| 10.100.0.2 | 65001 | default | - | Inherited from peer group Overlay | Inherited from peer group Overlay | - | Inherited from peer group Overlay | - |
+
+### BGP Neighbor Interfaces
+
+| Neighbor Interface | Peer Group | Remote AS | Peer Filter |
+| ------------------ | ---------- | --------- | ----------- |
+| Ethernet1 | Underlay | 65001 | - |
+| Ethernet2 | Underlay | 65001 | - |
+| Vlan4093 | MLAG | 65102 | - |
 
 ### Router BGP EVPN Address Family
 
@@ -597,6 +610,7 @@ router bgp 65102
    neighbor MLAG peer group
    neighbor MLAG remote-as 65102
    neighbor MLAG next-hop-self
+   neighbor MLAG description KR1-LEAF2B
    neighbor MLAG send-community
    neighbor MLAG maximum-routes 12000
    neighbor MLAG route-map RM-MLAG-PEER-IN in
@@ -609,20 +623,15 @@ router bgp 65102
    neighbor Underlay peer group
    neighbor Underlay send-community
    neighbor Underlay maximum-routes 12000
+   neighbor interface Ethernet1 peer-group Underlay remote-as 65001
+   neighbor interface Ethernet2 peer-group Underlay remote-as 65001
+   neighbor interface Vlan4093 peer-group MLAG remote-as 65102
    neighbor 10.100.0.1 peer group Overlay
    neighbor 10.100.0.1 remote-as 65001
    neighbor 10.100.0.1 description KR1-SPINE1
    neighbor 10.100.0.2 peer group Overlay
    neighbor 10.100.0.2 remote-as 65001
    neighbor 10.100.0.2 description KR1-SPINE2
-   neighbor 10.172.0.8 peer group Underlay
-   neighbor 10.172.0.8 remote-as 65001
-   neighbor 10.172.0.8 description KR1-SPINE1_Ethernet3
-   neighbor 10.172.0.10 peer group Underlay
-   neighbor 10.172.0.10 remote-as 65001
-   neighbor 10.172.0.10 description KR1-SPINE2_Ethernet3
-   neighbor 10.192.1.5 peer group MLAG
-   neighbor 10.192.1.5 description KR1-LEAF2B
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle 10LAN_Zone
@@ -641,8 +650,10 @@ router bgp 65102
       neighbor Overlay activate
    !
    address-family ipv4
+      neighbor MLAG next-hop address-family ipv6 originate
       neighbor MLAG activate
       no neighbor Overlay activate
+      neighbor Underlay next-hop address-family ipv6 originate
       neighbor Underlay activate
    !
    vrf 10LAN_Zone
