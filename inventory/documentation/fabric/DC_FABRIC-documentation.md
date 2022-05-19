@@ -53,6 +53,7 @@
 
 | Uplink IPv4 Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ---------------- | ------------------- | ------------------ | ------------------ |
+| 10.172.0.0/24 | 256 | 0 | 0.0 % |
 
 ## Point-To-Point Links Node Allocation
 

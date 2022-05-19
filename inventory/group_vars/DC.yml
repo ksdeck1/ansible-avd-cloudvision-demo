@@ -26,3 +26,10 @@ mgmt_gateway: 10.183.0.1
 cvp_instance_ip: 10.183.0.1
 cvp_ingestauth_key: ''
 # cvp_ingestauth_key: telarista
+
+# for eos_snapshot
+ansible_user: ansible
+ansible_password: ansible
+ansible_network_os: eos
+ansible_become: yes
+ansible_become_method: enable

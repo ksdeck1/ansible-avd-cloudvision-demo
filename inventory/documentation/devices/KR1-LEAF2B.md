@@ -147,7 +147,7 @@ daemon TerminAttr
 
 | Domain-id | Local-interface | Peer-address | Peer-link |
 | --------- | --------------- | ------------ | --------- |
-| KR1_LEAF2 | Vlan4094 | 10.192.0.4 | Port-Channel3 |
+| KR1_LEAF2 | Vlan4094 | 10.192.0.4 | Port-Channel2000 |
 
 Dual primary detection is disabled.
 
@@ -159,7 +159,7 @@ mlag configuration
    domain-id KR1_LEAF2
    local-interface Vlan4094
    peer-address 10.192.0.4
-   peer-link Port-Channel3
+   peer-link Port-Channel2000
    reload-delay mlag 300
    reload-delay non-mlag 330
 ```
@@ -244,8 +244,8 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet3 | MLAG_PEER_KR1-LEAF2A_Ethernet3 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 3 |
-| Ethernet4 | MLAG_PEER_KR1-LEAF2A_Ethernet4 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 3 |
+| Ethernet3 | MLAG_PEER_KR1-LEAF2A_Ethernet3 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 2000 |
+| Ethernet4 | MLAG_PEER_KR1-LEAF2A_Ethernet4 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 2000 |
 
 *Inherited from Port-Channel Interface
 
@@ -277,12 +277,12 @@ interface Ethernet2
 interface Ethernet3
    description MLAG_PEER_KR1-LEAF2A_Ethernet3
    no shutdown
-   channel-group 3 mode active
+   channel-group 2000 mode active
 !
 interface Ethernet4
    description MLAG_PEER_KR1-LEAF2A_Ethernet4
    no shutdown
-   channel-group 3 mode active
+   channel-group 2000 mode active
 ```
 
 ## Port-Channel Interfaces
@@ -293,13 +293,13 @@ interface Ethernet4
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel3 | MLAG_PEER_KR1-LEAF2A_Po3 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
+| Port-Channel2000 | MLAG_PEER_KR1-LEAF2A_Po3 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
-interface Port-Channel3
+interface Port-Channel2000
    description MLAG_PEER_KR1-LEAF2A_Po3
    no shutdown
    switchport

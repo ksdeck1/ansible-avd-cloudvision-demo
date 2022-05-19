@@ -23,6 +23,8 @@ all:
           configlets_prefix_var: ANET-KR
     # KR1_Fabric - EVPN Fabric running in home lab
     DC:
+      vars:
+        ansible_host: 10.84.12.66
       children:
         DC_FABRIC:
           children:
@@ -31,7 +33,9 @@ all:
                 type: spine
               hosts:
                 KR1-SPINE1:
+                  ansible_httpapi_port: 8001
                 KR1-SPINE2:
+                  ansible_httpapi_port: 8002
             KR1_PUBLIC_L3LEAFS:
               vars:
                 type: l3leaf
@@ -39,7 +43,9 @@ all:
                 KR1_LEAF1:
                   hosts:
                     KR1-LEAF1A:
+                      ansible_httpapi_port: 8003
                     KR1-LEAF1B:
+                      ansible_httpapi_port: 8004
             KR1_10LAN_L3LEAFS:
               vars:
                 type: l3leaf
@@ -47,7 +53,9 @@ all:
                 KR1_LEAF2:
                   hosts:
                     KR1-LEAF2A:
+                      ansible_httpapi_port: 8005
                     KR1-LEAF2B:
+                      ansible_httpapi_port: 8006
           vars:
             ansible_connection: httpapi
             ansible_network_os: eos

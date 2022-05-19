@@ -63,7 +63,7 @@ l3leaf:
     spanning_tree_priority: 16384
     uplink_interfaces: ['Ethernet1', 'Ethernet2']
     uplink_switches: ['KR1-SPINE1', 'KR1-SPINE2']
-#    uplink_ipv4_pool: 10.172.0.0/24
+    uplink_ipv4_pool: 10.172.0.0/24
   node_groups:
     KR1_LEAF1:
     # Filter L3 and L2 network services based on tenant and tags (and operation filter) | Optional

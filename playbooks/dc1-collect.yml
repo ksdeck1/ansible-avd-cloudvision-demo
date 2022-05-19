@@ -1,0 +1,12 @@
+---
+- name: Collect commands
+  hosts: DC_FABRIC
+#  hosts: KR1-SPINE1
+  connection: local
+  gather_facts: false
+  collections:
+    - arista.avd
+  tasks:
+    - name: Collect commands
+      import_role:
+        name: eos_snapshot

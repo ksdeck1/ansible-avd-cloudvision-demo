@@ -224,7 +224,7 @@ vlan_interfaces:
     ip_virtual_router_addresses:
     - 10.1.10.1
 port_channel_interfaces:
-  Port-Channel3:
+  Port-Channel2000:
     description: MLAG_PEER_KR1-LEAF2B_Po3
     type: switched
     shutdown: false
@@ -242,7 +242,7 @@ ethernet_interfaces:
     type: switched
     shutdown: false
     channel_group:
-      id: 3
+      id: 2000
       mode: active
   Ethernet4:
     peer: KR1-LEAF2B
@@ -252,7 +252,7 @@ ethernet_interfaces:
     type: switched
     shutdown: false
     channel_group:
-      id: 3
+      id: 2000
       mode: active
   Ethernet1:
     peer: KR1-SPINE1
@@ -276,7 +276,7 @@ mlag_configuration:
   domain_id: KR1_LEAF2
   local_interface: Vlan4094
   peer_address: 10.192.0.5
-  peer_link: Port-Channel3
+  peer_link: Port-Channel2000
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
 route_maps:
