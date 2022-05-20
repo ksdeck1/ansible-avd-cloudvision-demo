@@ -24,7 +24,7 @@ all:
     # KR1_Fabric - EVPN Fabric running in home lab
     DC:
       vars:
-        ansible_host: 10.84.12.66
+        ansible_host: 10.84.12.67
       children:
         DC_FABRIC:
           children:

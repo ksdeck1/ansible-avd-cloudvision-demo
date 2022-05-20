@@ -22,9 +22,10 @@ Et8                            up             up
 Lo0                            up             up                 EVPN_Overlay_Peering
 Lo1                            up             up                 VTEP_VXLAN_Tunnel_Source
 Ma1                            up             up                 oob_management
-Po3                            up             up                 MLAG_PEER_KR1-LEAF1A_Po3
+Po2000                         up             up                 MLAG_PEER_KR1-LEAF1A_Po3
 Vl110                          up             up                 OP_Zone_1
 Vl130                          up             up                 10LAN_Zone_1
+Vl3997                         up             up                 
 Vl3998                         up             up                 
 Vl3999                         up             up                 
 Vl4000                         up             up                 
@@ -45,6 +46,7 @@ Loopback1       10.100.1.3/32      up          up              65535
 Management1     10.183.0.14/24     up          up               1500           
 Vlan110         10.1.10.3/24       up          up               1500           
 Vlan130         10.1.30.3/24       up          up               1500           
+Vlan3997        unassigned         up          up               9164           
 Vlan3998        unassigned         up          up               9164           
 Vlan3999        unassigned         up          up               9164           
 Vlan4000        unassigned         up          up               9164           
@@ -54,9 +56,9 @@ Vlan4094        10.192.0.1/31      up          up               1500
 ## show lldp neighbors
 
 ```
-Last table change time   : 3:07:56 ago
-Number of table inserts  : 20
-Number of table deletes  : 8
+Last table change time   : 0:02:10 ago
+Number of table inserts  : 6
+Number of table deletes  : 1
 Number of table drops    : 0
 Number of table age-outs : 1
 
@@ -67,13 +69,6 @@ Et2           KR1-SPINE2               Ethernet2           120
 Et3           KR1-LEAF1A               Ethernet3           120
 Et4           KR1-LEAF1A               Ethernet4           120
 Et5           DC1-L2LEAF1A             Ethernet2           120
-Ma1           KR1-LEAF2B               Management1         120
-Ma1           DC1-L2LEAF2A             Management1         120
-Ma1           KR1-LEAF1A               Management1         120
-Ma1           KR1-SPINE1               Management1         120
-Ma1           KR1-SPINE2               Management1         120
-Ma1           DC1-L2LEAF1A             Management1         120
-Ma1           KR1-LEAF2A               Management1         120
 ```
 ## show running-config
 
@@ -162,7 +157,7 @@ management api http-commands
    vrf MGMT
       no shutdown
 !
-interface Port-Channel3
+interface Port-Channel2000
    description MLAG_PEER_KR1-LEAF1A_Po3
    switchport trunk allowed vlan 2-4094
    switchport mode trunk
@@ -181,11 +176,11 @@ interface Ethernet2
 !
 interface Ethernet3
    description MLAG_PEER_KR1-LEAF1A_Ethernet3
-   channel-group 3 mode active
+   channel-group 2000 mode active
 !
 interface Ethernet4
    description MLAG_PEER_KR1-LEAF1A_Ethernet4
-   channel-group 3 mode active
+   channel-group 2000 mode active
 !
 interface Ethernet5
 !
@@ -207,6 +202,8 @@ interface Management1
    description oob_management
    vrf MGMT
    ip address 10.183.0.14/24
+   no lldp transmit
+   no lldp receive
 !
 interface Vlan110
    description OP_Zone_1
@@ -256,7 +253,7 @@ mlag configuration
    domain-id KR1_LEAF1
    local-interface Vlan4094
    peer-address 10.192.0.0
-   peer-link Port-Channel3
+   peer-link Port-Channel2000
    reload-delay mlag 300
    reload-delay non-mlag 330
 !
@@ -359,7 +356,7 @@ Internal build ID: b3360a82-d532-4043-b6b0-50707eede2a9
 Image format version: 1.0
 Image optimization: None
 
-Uptime: 3 hours and 18 minutes
+Uptime: 25 minutes
 Total memory: 2004396 kB
-Free memory: 944260 kB
+Free memory: 910708 kB
 ```

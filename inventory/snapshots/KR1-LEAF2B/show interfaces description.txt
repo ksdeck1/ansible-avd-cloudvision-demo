@@ -1,21 +1,11 @@
 Interface                      Status         Protocol           Description
-Et1                            up             up                 P2P_LINK_TO_KR1-SPINE1_Ethernet4
-Et2                            up             up                 P2P_LINK_TO_KR1-SPINE2_Ethernet4
-Et3                            up             up                 MLAG_PEER_KR1-LEAF2A_Ethernet3
-Et4                            up             up                 MLAG_PEER_KR1-LEAF2A_Ethernet4
+Et1                            up             up                 P2P_LINK_TO_KR1-LEAF1A_Ethernet1
+Et2                            up             up                 P2P_LINK_TO_KR1-LEAF1B_Ethernet1
+Et3                            up             up                 P2P_LINK_TO_KR1-LEAF2A_Ethernet1
+Et4                            up             up                 P2P_LINK_TO_KR1-LEAF2B_Ethernet1
 Et5                            up             up                 
 Et6                            up             up                 
 Et7                            up             up                 
 Et8                            up             up                 
 Lo0                            up             up                 EVPN_Overlay_Peering
-Lo1                            up             up                 VTEP_VXLAN_Tunnel_Source
 Ma1                            up             up                 oob_management
-Po3                            up             up                 MLAG_PEER_KR1-LEAF2A_Po3
-Vl110                          up             up                 OP_Zone_1
-Vl120                          up             up                 10LAN_Zone_1
-Vl3998                         up             up                 
-Vl3999                         up             up                 
-Vl4000                         up             up                 
-Vl4093                         up             up                 MLAG_PEER_L3_PEERING
-Vl4094                         up             up                 MLAG_PEER
-Vx1                            up             up                 KR1-LEAF2B_VTEP

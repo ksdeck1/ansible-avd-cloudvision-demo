@@ -93,18 +93,6 @@ router_bgp:
           - '10:10'
       redistribute_routes:
       - connected
-    Tenant_B_OP_Zone:
-      router_id: 10.100.0.4
-      rd: 10.100.0.4:20
-      route_targets:
-        import:
-          evpn:
-          - '20:20'
-        export:
-          evpn:
-          - '20:20'
-      redistribute_routes:
-      - connected
   vlan_aware_bundles:
     10LANTEST_Zone:
       rd: 10.100.0.4:30
@@ -122,14 +110,6 @@ router_bgp:
       redistribute_routes:
       - learned
       vlan: 110
-    Tenant_B_OP_Zone:
-      rd: 10.100.0.4:20
-      route_targets:
-        both:
-        - '20:20'
-      redistribute_routes:
-      - learned
-      vlan: 210
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -181,9 +161,6 @@ vrfs:
   OP_Zone:
     tenant: Tenant_A
     ip_routing: true
-  Tenant_B_OP_Zone:
-    tenant: Tenant_B
-    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -213,9 +190,6 @@ vlans:
   110:
     tenant: Tenant_A
     name: OP_Zone_1
-  210:
-    tenant: Tenant_B
-    name: Tenant_B_OP_Zone_1
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
@@ -249,14 +223,6 @@ vlan_interfaces:
     ip_address: 10.1.10.3/24
     ip_virtual_router_addresses:
     - 10.1.10.1
-  Vlan210:
-    tenant: Tenant_B
-    tags:
-    - Public
-    description: Tenant_B_OP_Zone_1
-    shutdown: false
-    vrf: Tenant_B_OP_Zone
-    ip_address_virtual: 10.2.10.1/24
 port_channel_interfaces:
   Port-Channel2000:
     description: MLAG_PEER_KR1-LEAF1A_Po3
@@ -363,12 +329,8 @@ vxlan_interface:
           vni: 10130
         110:
           vni: 10110
-        210:
-          vni: 20210
       vrfs:
         10LANTEST_Zone:
           vni: 30
         OP_Zone:
           vni: 10
-        Tenant_B_OP_Zone:
-          vni: 20

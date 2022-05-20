@@ -1,4 +1,4 @@
-ansible_host: 10.84.12.66
+ansible_host: 10.84.12.67
 ansible_connection: httpapi
 ansible_network_os: eos
 ansible_user: ansible
@@ -226,26 +226,26 @@ ansible_facts:
     vlans: []
   avd_topology_peers:
     KR1-SPINE1:
-    - KR1-LEAF1A
-    - KR1-LEAF1B
     - KR1-LEAF2A
     - KR1-LEAF2B
+    - KR1-LEAF1A
+    - KR1-LEAF1B
     KR1-SPINE2:
-    - KR1-LEAF1A
-    - KR1-LEAF1B
     - KR1-LEAF2A
     - KR1-LEAF2B
+    - KR1-LEAF1A
+    - KR1-LEAF1B
   avd_overlay_peers:
     KR1-SPINE1:
-    - KR1-LEAF1A
-    - KR1-LEAF1B
     - KR1-LEAF2A
     - KR1-LEAF2B
+    - KR1-LEAF1A
+    - KR1-LEAF1B
     KR1-SPINE2:
-    - KR1-LEAF1A
-    - KR1-LEAF1B
     - KR1-LEAF2A
     - KR1-LEAF2B
+    - KR1-LEAF1A
+    - KR1-LEAF1B
 switch:
   type: spine
   node_type_key: spine
@@ -333,26 +333,26 @@ topology:
   vlans: []
 avd_topology_peers:
   KR1-SPINE1:
-  - KR1-LEAF1A
-  - KR1-LEAF1B
   - KR1-LEAF2A
   - KR1-LEAF2B
+  - KR1-LEAF1A
+  - KR1-LEAF1B
   KR1-SPINE2:
-  - KR1-LEAF1A
-  - KR1-LEAF1B
   - KR1-LEAF2A
   - KR1-LEAF2B
+  - KR1-LEAF1A
+  - KR1-LEAF1B
 avd_overlay_peers:
   KR1-SPINE1:
-  - KR1-LEAF1A
-  - KR1-LEAF1B
   - KR1-LEAF2A
   - KR1-LEAF2B
+  - KR1-LEAF1A
+  - KR1-LEAF1B
   KR1-SPINE2:
-  - KR1-LEAF1A
-  - KR1-LEAF1B
   - KR1-LEAF2A
   - KR1-LEAF2B
+  - KR1-LEAF1A
+  - KR1-LEAF1B
 avd_collection_version: version
 playbook_dir: /home/avd/arista-ansible/ansible-avd-cloudvision-demo-1/playbooks
 ansible_playbook_python: /usr/local/bin/python
@@ -381,10 +381,10 @@ groups:
   DC_FABRIC:
   - KR1-SPINE1
   - KR1-SPINE2
-  - KR1-LEAF1A
-  - KR1-LEAF1B
   - KR1-LEAF2A
   - KR1-LEAF2B
+  - KR1-LEAF1A
+  - KR1-LEAF1B
   KR1_SPINES:
   - KR1-SPINE1
   - KR1-SPINE2
@@ -405,7 +405,7 @@ groups:
   - KR1-LEAF1B
   - KR1-LEAF2A
   - KR1-LEAF2B
-omit: __omit_place_holder__04b8d3adeabd13f6a050073f6eba705e23c2e4f9
+omit: __omit_place_holder__4c12382089ff8297594f3d183d50a3e03e04a6f4
 ansible_version:
   string: 2.11.11
   full: 2.11.11

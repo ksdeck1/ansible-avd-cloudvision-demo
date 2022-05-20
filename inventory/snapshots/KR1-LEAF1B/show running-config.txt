@@ -82,7 +82,7 @@ management api http-commands
    vrf MGMT
       no shutdown
 !
-interface Port-Channel3
+interface Port-Channel2000
    description MLAG_PEER_KR1-LEAF1A_Po3
    switchport trunk allowed vlan 2-4094
    switchport mode trunk
@@ -101,11 +101,11 @@ interface Ethernet2
 !
 interface Ethernet3
    description MLAG_PEER_KR1-LEAF1A_Ethernet3
-   channel-group 3 mode active
+   channel-group 2000 mode active
 !
 interface Ethernet4
    description MLAG_PEER_KR1-LEAF1A_Ethernet4
-   channel-group 3 mode active
+   channel-group 2000 mode active
 !
 interface Ethernet5
 !
@@ -127,6 +127,8 @@ interface Management1
    description oob_management
    vrf MGMT
    ip address 10.183.0.14/24
+   no lldp transmit
+   no lldp receive
 !
 interface Vlan110
    description OP_Zone_1
@@ -176,7 +178,7 @@ mlag configuration
    domain-id KR1_LEAF1
    local-interface Vlan4094
    peer-address 10.192.0.0
-   peer-link Port-Channel3
+   peer-link Port-Channel2000
    reload-delay mlag 300
    reload-delay non-mlag 330
 !

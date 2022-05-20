@@ -212,7 +212,6 @@ vlan internal order ascending range 3900 4000
 | ------- | ---- | ------------ |
 | 110 | OP_Zone_1 | - |
 | 130 | 10LAN_Zone_1 | - |
-| 210 | Tenant_B_OP_Zone_1 | - |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -225,9 +224,6 @@ vlan 110
 !
 vlan 130
    name 10LAN_Zone_1
-!
-vlan 210
-   name Tenant_B_OP_Zone_1
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -355,7 +351,6 @@ interface Loopback1
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan110 | OP_Zone_1 | OP_Zone | - | false |
 | Vlan130 | 10LAN_Zone_1 | 10LANTEST_Zone | - | false |
-| Vlan210 | Tenant_B_OP_Zone_1 | Tenant_B_OP_Zone | - | false |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | false |
 | Vlan4094 | MLAG_PEER | default | 1500 | false |
 
@@ -365,7 +360,6 @@ interface Loopback1
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan110 |  OP_Zone  |  10.1.10.2/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
 | Vlan130 |  10LANTEST_Zone  |  10.1.30.2/24  |  -  |  10.1.30.1  |  -  |  -  |  -  |
-| Vlan210 |  Tenant_B_OP_Zone  |  -  |  10.2.10.1/24  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  -  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.192.0.0/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -387,12 +381,6 @@ interface Vlan130
    vrf 10LANTEST_Zone
    ip address 10.1.30.2/24
    ip virtual-router address 10.1.30.1
-!
-interface Vlan210
-   description Tenant_B_OP_Zone_1
-   no shutdown
-   vrf Tenant_B_OP_Zone
-   ip address virtual 10.2.10.1/24
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -424,7 +412,6 @@ interface Vlan4094
 | ---- | --- | ---------- | --------------- |
 | 110 | 10110 | - | - |
 | 130 | 10130 | - | - |
-| 210 | 20210 | - | - |
 
 #### VRF to VNI and Multicast Group Mappings
 
@@ -432,7 +419,6 @@ interface Vlan4094
 | ---- | --- | --------------- |
 | 10LANTEST_Zone | 30 | - |
 | OP_Zone | 10 | - |
-| Tenant_B_OP_Zone | 20 | - |
 
 ### VXLAN Interface Device Configuration
 
@@ -445,10 +431,8 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 110 vni 10110
    vxlan vlan 130 vni 10130
-   vxlan vlan 210 vni 20210
    vxlan vrf 10LANTEST_Zone vni 30
    vxlan vrf OP_Zone vni 10
-   vxlan vrf Tenant_B_OP_Zone vni 20
 ```
 
 # Routing
@@ -484,7 +468,6 @@ ip virtual-router mac-address 00:1c:73:00:dc:11
 | 10LANTEST_Zone | true |
 | MGMT | false |
 | OP_Zone | true |
-| Tenant_B_OP_Zone | true |
 
 ### IP Routing Device Configuration
 
@@ -494,7 +477,6 @@ ip routing
 ip routing vrf 10LANTEST_Zone
 no ip routing vrf MGMT
 ip routing vrf OP_Zone
-ip routing vrf Tenant_B_OP_Zone
 ```
 ## IPv6 Routing
 
@@ -506,7 +488,6 @@ ip routing vrf Tenant_B_OP_Zone
 | 10LANTEST_Zone | false |
 | MGMT | false |
 | OP_Zone | false |
-| Tenant_B_OP_Zone | false |
 
 ### IPv6 Routing Device Configuration
 
@@ -607,7 +588,6 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
 | 10LANTEST_Zone | 10.100.0.3:30 | 30:30 | - | - | learned | 130 |
 | OP_Zone | 10.100.0.3:10 | 10:10 | - | - | learned | 110 |
-| Tenant_B_OP_Zone | 10.100.0.3:20 | 20:20 | - | - | learned | 210 |
 
 ### Router BGP VRFs
 
@@ -615,7 +595,6 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 | --- | ------------------- | ------------ |
 | 10LANTEST_Zone | 10.100.0.3:30 | connected |
 | OP_Zone | 10.100.0.3:10 | connected |
-| Tenant_B_OP_Zone | 10.100.0.3:20 | connected |
 
 ### Router BGP Device Configuration
 
@@ -667,12 +646,6 @@ router bgp 65101
       redistribute learned
       vlan 110
    !
-   vlan-aware-bundle Tenant_B_OP_Zone
-      rd 10.100.0.3:20
-      route-target both 20:20
-      redistribute learned
-      vlan 210
-   !
    address-family evpn
       neighbor Overlay activate
    !
@@ -694,13 +667,6 @@ router bgp 65101
       rd 10.100.0.3:10
       route-target import evpn 10:10
       route-target export evpn 10:10
-      router-id 10.100.0.3
-      redistribute connected
-   !
-   vrf Tenant_B_OP_Zone
-      rd 10.100.0.3:20
-      route-target import evpn 20:20
-      route-target export evpn 20:20
       router-id 10.100.0.3
       redistribute connected
 ```
@@ -799,7 +765,6 @@ route-map RM-MLAG-PEER-IN permit 10
 | 10LANTEST_Zone | enabled |
 | MGMT | disabled |
 | OP_Zone | enabled |
-| Tenant_B_OP_Zone | enabled |
 
 ## VRF Instances Device Configuration
 
@@ -810,8 +775,6 @@ vrf instance 10LANTEST_Zone
 vrf instance MGMT
 !
 vrf instance OP_Zone
-!
-vrf instance Tenant_B_OP_Zone
 ```
 
 # Quality Of Service

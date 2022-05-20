@@ -93,6 +93,18 @@ router_bgp:
           - '10:10'
       redistribute_routes:
       - connected
+    Teletron:
+      router_id: 10.100.0.6
+      rd: 10.100.0.6:230
+      route_targets:
+        import:
+          evpn:
+          - 230:230
+        export:
+          evpn:
+          - 230:230
+      redistribute_routes:
+      - connected
   vlan_aware_bundles:
     10LAN_Zone:
       rd: 10.100.0.6:20
@@ -110,6 +122,14 @@ router_bgp:
       redistribute_routes:
       - learned
       vlan: 110
+    Teletron:
+      rd: 10.100.0.6:230
+      route_targets:
+        both:
+        - 230:230
+      redistribute_routes:
+      - learned
+      vlan: 2103
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -161,6 +181,9 @@ vrfs:
   OP_Zone:
     tenant: Tenant_A
     ip_routing: true
+  Teletron:
+    tenant: Tenant_B
+    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -190,6 +213,9 @@ vlans:
   110:
     tenant: Tenant_A
     name: OP_Zone_1
+  2103:
+    tenant: Tenant_B
+    name: Teletron
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
@@ -223,6 +249,14 @@ vlan_interfaces:
     ip_address: 10.1.10.3/24
     ip_virtual_router_addresses:
     - 10.1.10.1
+  Vlan2103:
+    tenant: Tenant_B
+    tags:
+    - 10LAN
+    description: Teletron
+    shutdown: false
+    vrf: Teletron
+    ip_address_virtual: 10.2.110.1/24
 port_channel_interfaces:
   Port-Channel2000:
     description: MLAG_PEER_KR1-LEAF2A_Po3
@@ -329,8 +363,12 @@ vxlan_interface:
           vni: 10120
         110:
           vni: 10110
+        2103:
+          vni: 22103
       vrfs:
         10LAN_Zone:
           vni: 20
         OP_Zone:
           vni: 10
+        Teletron:
+          vni: 230

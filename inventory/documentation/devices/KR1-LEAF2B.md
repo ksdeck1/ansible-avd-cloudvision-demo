@@ -212,6 +212,7 @@ vlan internal order ascending range 3900 4000
 | ------- | ---- | ------------ |
 | 110 | OP_Zone_1 | - |
 | 120 | 10LAN_Zone_1 | - |
+| 2103 | Teletron | - |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -224,6 +225,9 @@ vlan 110
 !
 vlan 120
    name 10LAN_Zone_1
+!
+vlan 2103
+   name Teletron
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -351,6 +355,7 @@ interface Loopback1
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan110 | OP_Zone_1 | OP_Zone | - | false |
 | Vlan120 | 10LAN_Zone_1 | 10LAN_Zone | - | false |
+| Vlan2103 | Teletron | Teletron | - | false |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | false |
 | Vlan4094 | MLAG_PEER | default | 1500 | false |
 
@@ -360,6 +365,7 @@ interface Loopback1
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan110 |  OP_Zone  |  10.1.10.3/24  |  -  |  10.1.10.1  |  -  |  -  |  -  |
 | Vlan120 |  10LAN_Zone  |  10.1.20.3/24  |  -  |  10.1.20.1  |  -  |  -  |  -  |
+| Vlan2103 |  Teletron  |  -  |  10.2.110.1/24  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  -  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.192.0.5/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -381,6 +387,12 @@ interface Vlan120
    vrf 10LAN_Zone
    ip address 10.1.20.3/24
    ip virtual-router address 10.1.20.1
+!
+interface Vlan2103
+   description Teletron
+   no shutdown
+   vrf Teletron
+   ip address virtual 10.2.110.1/24
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -412,6 +424,7 @@ interface Vlan4094
 | ---- | --- | ---------- | --------------- |
 | 110 | 10110 | - | - |
 | 120 | 10120 | - | - |
+| 2103 | 22103 | - | - |
 
 #### VRF to VNI and Multicast Group Mappings
 
@@ -419,6 +432,7 @@ interface Vlan4094
 | ---- | --- | --------------- |
 | 10LAN_Zone | 20 | - |
 | OP_Zone | 10 | - |
+| Teletron | 230 | - |
 
 ### VXLAN Interface Device Configuration
 
@@ -431,8 +445,10 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 110 vni 10110
    vxlan vlan 120 vni 10120
+   vxlan vlan 2103 vni 22103
    vxlan vrf 10LAN_Zone vni 20
    vxlan vrf OP_Zone vni 10
+   vxlan vrf Teletron vni 230
 ```
 
 # Routing
@@ -468,6 +484,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:11
 | 10LAN_Zone | true |
 | MGMT | false |
 | OP_Zone | true |
+| Teletron | true |
 
 ### IP Routing Device Configuration
 
@@ -477,6 +494,7 @@ ip routing
 ip routing vrf 10LAN_Zone
 no ip routing vrf MGMT
 ip routing vrf OP_Zone
+ip routing vrf Teletron
 ```
 ## IPv6 Routing
 
@@ -488,6 +506,7 @@ ip routing vrf OP_Zone
 | 10LAN_Zone | false |
 | MGMT | false |
 | OP_Zone | false |
+| Teletron | false |
 
 ### IPv6 Routing Device Configuration
 
@@ -588,6 +607,7 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
 | 10LAN_Zone | 10.100.0.6:20 | 20:20 | - | - | learned | 120 |
 | OP_Zone | 10.100.0.6:10 | 10:10 | - | - | learned | 110 |
+| Teletron | 10.100.0.6:230 | 230:230 | - | - | learned | 2103 |
 
 ### Router BGP VRFs
 
@@ -595,6 +615,7 @@ ip route vrf MGMT 0.0.0.0/0 10.183.0.1
 | --- | ------------------- | ------------ |
 | 10LAN_Zone | 10.100.0.6:20 | connected |
 | OP_Zone | 10.100.0.6:10 | connected |
+| Teletron | 10.100.0.6:230 | connected |
 
 ### Router BGP Device Configuration
 
@@ -646,6 +667,12 @@ router bgp 65102
       redistribute learned
       vlan 110
    !
+   vlan-aware-bundle Teletron
+      rd 10.100.0.6:230
+      route-target both 230:230
+      redistribute learned
+      vlan 2103
+   !
    address-family evpn
       neighbor Overlay activate
    !
@@ -667,6 +694,13 @@ router bgp 65102
       rd 10.100.0.6:10
       route-target import evpn 10:10
       route-target export evpn 10:10
+      router-id 10.100.0.6
+      redistribute connected
+   !
+   vrf Teletron
+      rd 10.100.0.6:230
+      route-target import evpn 230:230
+      route-target export evpn 230:230
       router-id 10.100.0.6
       redistribute connected
 ```
@@ -765,6 +799,7 @@ route-map RM-MLAG-PEER-IN permit 10
 | 10LAN_Zone | enabled |
 | MGMT | disabled |
 | OP_Zone | enabled |
+| Teletron | enabled |
 
 ## VRF Instances Device Configuration
 
@@ -775,6 +810,8 @@ vrf instance 10LAN_Zone
 vrf instance MGMT
 !
 vrf instance OP_Zone
+!
+vrf instance Teletron
 ```
 
 # Quality Of Service

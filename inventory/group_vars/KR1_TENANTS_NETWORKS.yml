@@ -96,3 +96,12 @@ tenants:
             tags: [ Public ]
             enabled: true
             ip_address_virtual: 10.2.10.1/24
+    vrfs:
+      Teletron:
+        vrf_vni: 230
+        svis:
+          2103:
+            name: Teletron
+            tags: [ 10LAN ]
+            enabled: true
+            ip_address_virtual: 10.2.110.1/24

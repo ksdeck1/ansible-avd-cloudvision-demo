@@ -1,6 +1,6 @@
-Last table change time   : 3:07:56 ago
-Number of table inserts  : 20
-Number of table deletes  : 8
+Last table change time   : 0:02:10 ago
+Number of table inserts  : 6
+Number of table deletes  : 1
 Number of table drops    : 0
 Number of table age-outs : 1
 
@@ -11,10 +11,3 @@ Et2           KR1-SPINE2               Ethernet2           120
 Et3           KR1-LEAF1A               Ethernet3           120
 Et4           KR1-LEAF1A               Ethernet4           120
 Et5           DC1-L2LEAF1A             Ethernet2           120
-Ma1           KR1-LEAF2B               Management1         120
-Ma1           DC1-L2LEAF2A             Management1         120
-Ma1           KR1-LEAF1A               Management1         120
-Ma1           KR1-SPINE1               Management1         120
-Ma1           KR1-SPINE2               Management1         120
-Ma1           DC1-L2LEAF1A             Management1         120
-Ma1           KR1-LEAF2A               Management1         120
