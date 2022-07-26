@@ -17,7 +17,6 @@ bgp_peer_groups:
     password: "vnEaG8gMeQf3d3cN6PktXQ=="
 
 #### Override for vEOS Lab Caveats ####
-
 # Disable update wait-for-convergence and update wait-for-install,
 # which is not supported in vEOS-LAB.
 # Refer to design guide

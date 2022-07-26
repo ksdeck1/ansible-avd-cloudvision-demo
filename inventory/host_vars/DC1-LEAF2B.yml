@@ -27,15 +27,10 @@ l3leaf:
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
   node_groups:
-    DC1_LEAF1:
-      bgp_as: 65101
+    DC1_LEAF2:
+      bgp_as: 65102
       nodes:
-        DC1-LEAF1A:
-          id: 1
-          mgmt_ip: 10.255.0.13/24
-          uplink_switch_interfaces: [Ethernet1, Ethernet1]
-        DC1-LEAF1B:
-          id: 2
-          mgmt_ip: 10.255.0.14/24
-          uplink_switch_interfaces: [Ethernet2, Ethernet2]
-
+        DC1-LEAF2B:
+          id: 4
+          mgmt_ip: 10.255.0.16/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]

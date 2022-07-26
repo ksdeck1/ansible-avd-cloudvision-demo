@@ -42,8 +42,6 @@
 | l3leaf | DC1-LEAF1B | Ethernet2 | spine | DC1-SPINE2 | Ethernet2 |
 | l3leaf | DC1-LEAF2A | Ethernet1 | spine | DC1-SPINE1 | Ethernet3 |
 | l3leaf | DC1-LEAF2A | Ethernet2 | spine | DC1-SPINE2 | Ethernet3 |
-| l3leaf | DC1-LEAF2A | Ethernet3 | mlag_peer | DC1-LEAF2B | Ethernet3 |
-| l3leaf | DC1-LEAF2A | Ethernet4 | mlag_peer | DC1-LEAF2B | Ethernet4 |
 | l3leaf | DC1-LEAF2B | Ethernet1 | spine | DC1-SPINE1 | Ethernet4 |
 | l3leaf | DC1-LEAF2B | Ethernet2 | spine | DC1-SPINE2 | Ethernet4 |
 
@@ -98,4 +96,4 @@
 | DC1_FABRIC | DC1-LEAF1A | 192.168.254.3/32 |
 | DC1_FABRIC | DC1-LEAF1B | 192.168.254.3/32 |
 | DC1_FABRIC | DC1-LEAF2A | 192.168.254.5/32 |
-| DC1_FABRIC | DC1-LEAF2B | 192.168.254.5/32 |
+| DC1_FABRIC | DC1-LEAF2B | 192.168.254.6/32 |

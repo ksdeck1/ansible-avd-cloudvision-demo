@@ -48,7 +48,7 @@ all:
                       ansible_host: 10.255.0.15
                     DC1-LEAF2B:
                       ansible_host: 10.255.0.16
-             
+                      
 #            DC1_L2LEAFS:
 #              vars:
 #                type: l2leaf
